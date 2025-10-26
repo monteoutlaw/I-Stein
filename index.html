@@ -45,13 +45,18 @@
 
                 <!-- Voice Settings -->
                 <div class="mb-4 p-4 bg-purple-50 rounded-lg">
-                    <h3 class="font-semibold mb-2">🎤 Voice</h3>
-                    <label class="flex items-center gap-2 mb-2">
+                    <h3 class="font-semibold mb-3">🎤 Voice</h3>
+                    <label class="flex items-center gap-2 mb-3">
                         <input type="checkbox" id="autoSpeak" class="w-4 h-4"/>
                         <span class="text-sm">Auto-speak responses</span>
                     </label>
-                    <label class="block text-sm mb-1">Speed: <span id="speedVal">1.0</span>x</label>
-                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1" class="w-full" oninput="document.getElementById('speedVal').textContent = this.value"/>
+                    <label class="block text-sm mb-1">Select Voice:</label>
+                    <select id="voiceSelect" class="w-full px-3 py-2 border rounded-lg mb-3 text-sm">
+                        <option value="">Default</option>
+                    </select>
+                    <label class="block text-sm mb-1">Speed: <span id="speedVal">1.2</span>x</label>
+                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.2" class="w-full mb-2" oninput="document.getElementById('speedVal').textContent = this.value"/>
+                    <button onclick="testVoice()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">🔊 Test Voice</button>
                 </div>
 
                 <div class="flex gap-2">
