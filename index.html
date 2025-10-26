@@ -3,8 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I-Stein Voice Assistant</title>
+    <title>I-Stein Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes typing {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite;
+        }
+        .listening-pulse {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     
@@ -21,55 +44,62 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">AI Mode</label>
                     <select id="aiMode" onchange="toggleAISettings()" class="w-full px-4 py-2 border rounded-lg">
-                        <option value="rules">🔧 Rule-Based (Free, Offline)</option>
+                        <option value="rules">🔧 Rule-Based (Free)</option>
                         <option value="gemini">✨ Google Gemini (Free!)</option>
                         <option value="openai">🤖 OpenAI ChatGPT</option>
                     </select>
                 </div>
 
-                <!-- Gemini Settings -->
                 <div id="geminiSettings" class="hidden mb-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
-                    <h3 class="font-semibold mb-2">✨ Google Gemini <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">FREE</span></h3>
+                    <h3 class="font-semibold mb-2">✨ Google Gemini</h3>
                     <input type="password" id="geminiKey" placeholder="AIzaSy..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
                     <p class="text-xs text-gray-600">Get FREE key: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-blue-600 underline">Google AI Studio</a></p>
                 </div>
 
-                <!-- OpenAI Settings -->
                 <div id="openaiSettings" class="hidden mb-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-                    <h3 class="font-semibold mb-2">🤖 OpenAI ChatGPT</h3>
+                    <h3 class="font-semibold mb-2">🤖 OpenAI</h3>
                     <input type="password" id="openaiKey" placeholder="sk-proj-..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
                     <p class="text-xs text-gray-600">Get key: <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 underline">platform.openai.com</a></p>
                 </div>
 
                 <!-- Voice Settings -->
                 <div class="mb-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
-                    <h3 class="font-semibold mb-3">🎤 Voice Settings</h3>
-                    
+                    <h3 class="font-semibold mb-3">🎤 Voice</h3>
+                    <label class="flex items-center gap-2 mb-3">
+                        <input type="checkbox" id="continuousListen" class="w-4 h-4"/>
+                        <span class="text-sm font-medium">🎙️ Always Listen (Auto Voice Detection)</span>
+                    </label>
                     <label class="flex items-center gap-2 mb-3">
                         <input type="checkbox" id="autoSpeak" class="w-4 h-4"/>
                         <span class="text-sm font-medium">Auto-speak responses</span>
                     </label>
-                    
                     <label class="block text-sm font-medium mb-2">Voice Number (0-21):</label>
                     <input type="number" id="voiceNum" min="0" max="21" value="5" class="w-full px-4 py-2 border rounded-lg mb-2"/>
                     <div class="text-xs text-gray-600 bg-white p-2 rounded mb-3">
-                        <strong>Recommended voices:</strong><br>
-                        • <strong>5</strong> = Google UK English Female 🇬🇧 (BEST!)<br>
-                        • <strong>6</strong> = Google UK English Male 🇬🇧<br>
-                        • <strong>4</strong> = Google US English<br>
-                        • <strong>2</strong> = Microsoft Zira (Female)
+                        <strong>Best voices:</strong><br>
+                        • <strong>5</strong> = Google UK English Female 🇬🇧<br>
+                        • <strong>4</strong> = Google US English
                     </div>
-                    
                     <label class="block text-sm font-medium mb-1">Speed: <span id="speedVal">1.3</span>x</label>
                     <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.3" class="w-full mb-3" oninput="document.getElementById('speedVal').textContent = this.value"/>
-                    
-                    <button onclick="testVoice()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium">🔊 Test Voice</button>
+                    <button onclick="testVoice()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">🔊 Test</button>
                 </div>
 
-                <div class="flex gap-2">
-                    <button onclick="saveSettings()" class="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium">💾 Save</button>
-                    <button onclick="testAPI()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">🧪 Test</button>
+                <!-- Personality -->
+                <div class="mb-4 p-4 bg-pink-50 rounded-lg border-2 border-pink-200">
+                    <h3 class="font-semibold mb-3">😊 Personality</h3>
+                    <label class="block text-sm font-medium mb-2">Your Name:</label>
+                    <input type="text" id="userName" placeholder="How should I call you?" class="w-full px-4 py-2 border rounded-lg mb-3"/>
+                    <label class="block text-sm font-medium mb-2">Assistant Style:</label>
+                    <select id="personality" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="friendly">😊 Friendly & Casual</option>
+                        <option value="professional">💼 Professional</option>
+                        <option value="funny">😂 Funny & Playful</option>
+                        <option value="motivational">💪 Motivational</option>
+                    </select>
                 </div>
+
+                <button onclick="saveSettings()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium">💾 Save All Settings</button>
             </div>
         </div>
     </div>
@@ -79,18 +109,24 @@
         <!-- Header -->
         <div class="bg-white shadow-md px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 p-2 rounded-full">
+                <div class="bg-indigo-600 p-2 rounded-full relative">
                     <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
                         <circle cx="12" cy="12" r="2" fill="white"/>
                         <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/>
                     </svg>
+                    <span id="listeningIndicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full listening-pulse"></span>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold">I-Stein 🎤</h1>
-                    <p class="text-xs text-gray-500" id="statusText">Ready</p>
+                    <h1 class="text-xl font-bold">I-Stein Ultimate</h1>
+                    <p class="text-xs text-gray-500" id="statusText">Ready to help!</p>
                 </div>
             </div>
             <div class="flex gap-2">
+                <button onclick="showCommands()" class="p-2 hover:bg-gray-100 rounded-full" title="Commands">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </button>
                 <button onclick="openSettings()" class="p-2 hover:bg-gray-100 rounded-full" title="Settings">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -108,21 +144,26 @@
         <!-- Messages -->
         <div id="messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
             <div class="text-center text-gray-500 mt-20">
-                <div class="text-6xl mb-4">🤖</div>
-                <p class="text-lg font-medium">Och aye! How can I help ye?</p>
-                <p class="text-sm mt-2">Try voice #5 (UK Female) for best results!</p>
+                <div class="text-6xl mb-4">🤖✨</div>
+                <p class="text-lg font-medium" id="welcomeMsg">Hello! I'm I-Stein, your ultimate AI assistant!</p>
+                <p class="text-sm mt-2">Type, speak, or use commands like /help</p>
+                <div class="mt-4 flex gap-2 justify-center flex-wrap">
+                    <button onclick="quickAction('Tell me about yourself')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">About I-Stein</button>
+                    <button onclick="quickAction('/help')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">Show Commands</button>
+                    <button onclick="quickAction('/joke')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">Tell a Joke</button>
+                </div>
             </div>
         </div>
 
         <!-- Input -->
         <div class="bg-white border-t px-4 py-3">
             <div class="flex gap-2 max-w-4xl mx-auto">
-                <button onclick="startVoice()" id="voiceBtn" class="bg-red-500 text-white p-3 rounded-full hover:bg-red-600">
+                <button onclick="toggleContinuousListen()" id="voiceBtn" class="bg-red-500 text-white p-3 rounded-full hover:bg-red-600" title="Toggle Always Listen">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
                     </svg>
                 </button>
-                <input type="text" id="input" placeholder="Type or speak..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeypress="if(event.key==='Enter')send()"/>
+                <input type="text" id="input" placeholder="Type a message or /command..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeypress="if(event.key==='Enter')send()"/>
                 <button onclick="send()" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
@@ -139,26 +180,479 @@
             geminiKey: '',
             openaiKey: '',
             autoSpeak: false,
+            continuousListen: false,
             voiceSpeed: 1.3,
-            voiceNum: 5
+            voiceNum: 5,
+            userName: '',
+            personality: 'friendly'
         };
         let recognition = null;
         let synthesis = window.speechSynthesis;
+        let isListening = false;
+        let notes = [];
+        let todos = [];
 
         window.onload = () => {
             loadConfig();
             loadMessages();
             initVoice();
+            greetUser();
         };
 
+        function greetUser() {
+            if (config.userName) {
+                document.getElementById('welcomeMsg').textContent = `Hello ${config.userName}! I'm I-Stein, ready to help! 😊`;
+                document.getElementById('statusText').textContent = `Hey ${config.userName}!`;
+            }
+        }
+
+        function initVoice() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = true; // Continuous listening
+                recognition.interimResults = false;
+                
+                recognition.onstart = () => {
+                    isListening = true;
+                    document.getElementById('listeningIndicator').classList.remove('hidden');
+                    document.getElementById('voiceBtn').classList.add('bg-green-500');
+                    document.getElementById('voiceBtn').classList.remove('bg-red-500');
+                };
+                
+                recognition.onend = () => {
+                    isListening = false;
+                    document.getElementById('listeningIndicator').classList.add('hidden');
+                    document.getElementById('voiceBtn').classList.remove('bg-green-500');
+                    document.getElementById('voiceBtn').classList.add('bg-red-500');
+                    
+                    // Restart if continuous mode enabled
+                    if (config.continuousListen) {
+                        setTimeout(() => recognition.start(), 500);
+                    }
+                };
+                
+                recognition.onresult = (event) => {
+                    const text = event.results[event.results.length - 1][0].transcript;
+                    document.getElementById('input').value = text;
+                    setTimeout(() => send(), 300);
+                };
+                
+                recognition.onerror = (error) => {
+                    console.log('Voice error:', error);
+                    if (error.error !== 'no-speech') {
+                        isListening = false;
+                        document.getElementById('listeningIndicator').classList.add('hidden');
+                    }
+                };
+            } else {
+                document.getElementById('voiceBtn').style.display = 'none';
+            }
+        }
+
+        function toggleContinuousListen() {
+            config.continuousListen = !config.continuousListen;
+            saveConfig();
+            
+            if (config.continuousListen) {
+                recognition.start();
+                showToast('🎙️ Always listening mode ON! Just start talking.');
+            } else {
+                recognition.stop();
+                showToast('🎙️ Manual mode. Click mic to speak.');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-20 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg slide-in';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function quickAction(text) {
+            document.getElementById('input').value = text;
+            send();
+        }
+
+        function speak(text) {
+            if (!config.autoSpeak) return;
+            synthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = config.voiceSpeed;
+            utterance.pitch = 1.0;
+            
+            const voices = synthesis.getVoices();
+            if (voices[config.voiceNum]) {
+                utterance.voice = voices[config.voiceNum];
+            }
+            
+            synthesis.speak(utterance);
+        }
+
+        function testVoice() {
+            speak("Hello! This is I-Stein. How do you like my voice?");
+        }
+
+        function send() {
+            const input = document.getElementById('input');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            // Check for commands
+            if (text.startsWith('/')) {
+                handleCommand(text);
+                input.value = '';
+                return;
+            }
+            
+            addMessage(text, 'user');
+            input.value = '';
+            showTyping();
+            
+            setTimeout(async () => {
+                hideTyping();
+                try {
+                    const response = await getAIResponse(text);
+                    addMessage(response, 'bot', getQuickReplies(response));
+                    speak(response);
+                } catch (error) {
+                    addMessage('Oops! ' + error.message, 'bot');
+                }
+            }, 800);
+        }
+
+        function handleCommand(cmd) {
+            const command = cmd.toLowerCase().split(' ')[0];
+            
+            switch(command) {
+                case '/help':
+                    addMessage(`📚 **Available Commands:**
+                    
+• /help - Show this help
+• /joke - Tell a random joke
+• /fact - Share an interesting fact
+• /motivate - Get motivated!
+• /calc [expression] - Calculator (e.g., /calc 5+3)
+• /note [text] - Save a note
+• /notes - View all notes
+• /todo [task] - Add to-do
+• /todos - View to-dos
+• /clear - Clear chat
+• /time - Current time`, 'bot');
+                    break;
+                    
+                case '/joke':
+                    const jokes = [
+                        "Why don't scientists trust atoms? Because they make up everything! 😄",
+                        "Why did the scarecrow win an award? He was outstanding in his field! 🌾",
+                        "What do you call a bear with no teeth? A gummy bear! 🐻",
+                        "Why don't eggs tell jokes? They'd crack each other up! 🥚",
+                        "What did the ocean say to the beach? Nothing, it just waved! 🌊"
+                    ];
+                    addMessage(jokes[Math.floor(Math.random() * jokes.length)], 'bot', ['Tell another', 'That was funny!']);
+                    break;
+                    
+                case '/fact':
+                    const facts = [
+                        "🌍 Honey never spoils! Archaeologists have found 3000-year-old honey that's still edible.",
+                        "🐙 Octopuses have three hearts and blue blood!",
+                        "⚡ Lightning strikes the Earth about 100 times per second.",
+                        "🌙 You can fit all the planets in our solar system between Earth and the Moon.",
+                        "🦈 Sharks have been around longer than trees!"
+                    ];
+                    addMessage(facts[Math.floor(Math.random() * facts.length)], 'bot', ['Tell me more', 'Cool!']);
+                    break;
+                    
+                case '/motivate':
+                    const quotes = [
+                        "💪 You're capable of amazing things! Keep going!",
+                        "🌟 Believe in yourself. You've got this!",
+                        "🚀 Every expert was once a beginner. Keep learning!",
+                        "✨ Your potential is endless. Don't limit yourself!",
+                        "🎯 Success is the sum of small efforts repeated daily."
+                    ];
+                    addMessage(quotes[Math.floor(Math.random() * quotes.length)], 'bot', ['Thanks!', 'I needed that']);
+                    break;
+                    
+                case '/calc':
+                    try {
+                        const expr = cmd.substring(6);
+                        const result = eval(expr);
+                        addMessage(`🔢 Result: **${result}**`, 'bot');
+                    } catch(e) {
+                        addMessage('❌ Invalid calculation. Example: /calc 5+3*2', 'bot');
+                    }
+                    break;
+                    
+                case '/note':
+                    const note = cmd.substring(6);
+                    if (note) {
+                        notes.push({text: note, time: new Date().toLocaleString()});
+                        localStorage.setItem('notes', JSON.stringify(notes));
+                        addMessage(`📝 Note saved! You have ${notes.length} notes.`, 'bot', ['View notes']);
+                    } else {
+                        addMessage('Usage: /note Your note text here', 'bot');
+                    }
+                    break;
+                    
+                case '/notes':
+                    if (notes.length === 0) {
+                        addMessage('📝 No notes yet. Use /note [text] to save one!', 'bot');
+                    } else {
+                        let notesList = '📝 **Your Notes:**\n\n';
+                        notes.forEach((n, i) => {
+                            notesList += `${i+1}. ${n.text}\n   (${n.time})\n\n`;
+                        });
+                        addMessage(notesList, 'bot', ['Clear notes']);
+                    }
+                    break;
+                    
+                case '/todo':
+                    const task = cmd.substring(6);
+                    if (task) {
+                        todos.push({task: task, done: false, time: new Date().toLocaleString()});
+                        localStorage.setItem('todos', JSON.stringify(todos));
+                        addMessage(`✅ To-do added! You have ${todos.length} tasks.`, 'bot', ['View to-dos']);
+                    } else {
+                        addMessage('Usage: /todo Your task here', 'bot');
+                    }
+                    break;
+                    
+                case '/todos':
+                    if (todos.length === 0) {
+                        addMessage('✅ No to-dos yet. Use /todo [task] to add one!', 'bot');
+                    } else {
+                        let todoList = '✅ **Your To-Dos:**\n\n';
+                        todos.forEach((t, i) => {
+                            todoList += `${i+1}. ${t.done ? '✓' : '○'} ${t.task}\n`;
+                        });
+                        addMessage(todoList, 'bot', ['Clear to-dos']);
+                    }
+                    break;
+                    
+                case '/time':
+                    addMessage(`🕐 Current time: **${new Date().toLocaleString()}**`, 'bot');
+                    break;
+                    
+                case '/clear':
+                    clearChat();
+                    break;
+                    
+                default:
+                    addMessage(`❓ Unknown command: ${command}\nType /help for available commands.`, 'bot');
+            }
+        }
+
+        function getQuickReplies(response) {
+            const lower = response.toLowerCase();
+            if (lower.includes('?')) return ['Yes', 'No', 'Tell me more'];
+            if (lower.includes('joke')) return ['Tell another', 'That was funny!'];
+            if (lower.includes('help')) return ['Thanks!', 'Show more'];
+            return null;
+        }
+
+        function showCommands() {
+            handleCommand('/help');
+        }
+
+        function addMessage(text, sender, quickReplies = null) {
+            messages.push({ text, sender, time: Date.now(), quickReplies });
+            render();
+            saveMessages();
+        }
+
+        function showTyping() {
+            const container = document.getElementById('messages');
+            const typing = document.createElement('div');
+            typing.id = 'typing';
+            typing.className = 'flex gap-2 slide-in';
+            typing.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xl">🤖</div>
+                <div class="bg-white shadow rounded-2xl px-4 py-3 flex gap-1">
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot" style="animation-delay: 0.4s;"></div>
+                </div>
+            `;
+            container.appendChild(typing);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        function render() {
+            const container = document.getElementById('messages');
+            if (messages.length === 0) return;
+            
+            let html = '';
+            messages.forEach((msg, idx) => {
+                const isUser = msg.sender === 'user';
+                const isLast = idx === messages.length - 1;
+                
+                html += `
+                    <div class="flex gap-2 ${isUser ? 'flex-row-reverse' : ''} slide-in">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xl ${isUser ? 'bg-indigo-600 text-white' : 'bg-gray-300'}">
+                            ${isUser ? '👤' : '🤖'}
+                        </div>
+                        <div class="max-w-[70%]">
+                            <div class="rounded-2xl px-4 py-2 ${isUser ? 'bg-indigo-600 text-white' : 'bg-white shadow'} whitespace-pre-wrap">
+                                ${formatMessage(msg.text)}
+                            </div>
+                            ${msg.quickReplies && isLast ? `
+                                <div class="flex gap-2 mt-2 flex-wrap">
+                                    ${msg.quickReplies.map(reply => `
+                                        <button onclick="quickAction('${reply}')" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 rounded-full text-xs text-indigo-700">
+                                            ${reply}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function formatMessage(text) {
+            // Bold **text**
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Italic *text*
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            return text;
+        }
+
+        async function getAIResponse(text) {
+            const greeting = config.userName ? `${config.userName}` : 'friend';
+            
+            if (config.mode === 'rules') {
+                return getRuleResponse(text, greeting);
+            } else if (config.mode === 'gemini') {
+                if (!config.geminiKey) throw new Error('Gemini API key not set');
+                return await callGemini(text, greeting);
+            } else if (config.mode === 'openai') {
+                if (!config.openaiKey) throw new Error('OpenAI API key not set');
+                return await callOpenAI(text, greeting);
+            }
+        }
+
+        function getRuleResponse(msg, name) {
+            const m = msg.toLowerCase();
+            const styles = {
+                friendly: {
+                    hi: `Hey ${name}! 👋 Great to see you! How can I help?`,
+                    how: `I'm doing awesome, thanks for asking! 😊 How about you?`,
+                    thanks: `You're so welcome ${name}! Happy to help anytime! 😊`,
+                    bye: `See you later ${name}! Come back soon! 👋`,
+                    default: `That's interesting! Tell me more about that. 🤔`
+                },
+                professional: {
+                    hi: `Good day${name ? ' ' + name : ''}. How may I assist you today?`,
+                    how: `I'm functioning optimally. How may I help you?`,
+                    thanks: `You're welcome. Please let me know if you need anything else.`,
+                    bye: `Goodbye. Feel free to return if you need assistance.`,
+                    default: `I understand. Could you provide more details?`
+                },
+                funny: {
+                    hi: `Heyyy ${name}! 🎉 Ready to have some fun? What's up?`,
+                    how: `I'm fantabulous! Living my best digital life! 😎 You?`,
+                    thanks: `No problemo ${name}! I'm here all week! (Actually, I'm here forever 😅)`,
+                    bye: `Later gator! 🐊 Don't be a stranger!`,
+                    default: `Ooh, spicy topic! Tell me everything! 🌶️`
+                },
+                motivational: {
+                    hi: `Hello ${name}! 💪 Ready to conquer today? Let's do this!`,
+                    how: `I'm energized and ready to help you achieve greatness! 🌟`,
+                    thanks: `You're amazing ${name}! Keep up that positive attitude! ✨`,
+                    bye: `Go out there and be awesome ${name}! You've got this! 🚀`,
+                    default: `That's a powerful thought! Let's explore it together! 💡`
+                }
+            };
+            
+            const style = styles[config.personality] || styles.friendly;
+            
+            if (m.match(/^(hi|hello|hey|greetings)/)) return style.hi;
+            if (m.match(/how are you|how's it going|what's up/)) return style.how;
+            if (m.match(/thank|thanks|thx/)) return style.thanks;
+            if (m.match(/bye|goodbye|see you|later/)) return style.bye;
+            if (m.match(/time|date/)) return `🕐 It's ${new Date().toLocaleString()}. What can I help you with?`;
+            if (m.match(/who are you|what are you|tell me about yourself/)) {
+                return `I'm I-Stein Ultimate! 🤖✨\n\nI can:\n• Chat with you\n• Use voice (say anything!)\n• Do calculations\n• Save notes & to-dos\n• Tell jokes & facts\n• And much more!\n\nTry typing /help to see all my commands!`;
+            }
+            
+            return style.default;
+        }
+
+        async function callGemini(text, name) {
+            const personality = {
+                friendly: 'friendly and casual',
+                professional: 'professional and formal',
+                funny: 'funny and playful',
+                motivational: 'motivational and encouraging'
+            }[config.personality] || 'friendly';
+            
+            const prompt = `You are I-Stein, a helpful AI assistant with a ${personality} personality. ${name !== 'friend' ? `The user's name is ${name}.` : ''} Be conversational and helpful. Keep responses brief (2-3 sentences max).\n\nUser: ${text}\n\nAssistant:`;
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${config.geminiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            
+            if (!response.ok) throw new Error('Gemini API error');
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        async function callOpenAI(text, name) {
+            const personality = {
+                friendly: 'friendly and casual',
+                professional: 'professional and formal',
+                funny: 'funny and playful',
+                motivational: 'motivational and encouraging'
+            }[config.personality] || 'friendly';
+            
+            const systemMsg = `You are I-Stein, a helpful AI assistant with a ${personality} personality. ${name !== 'friend' ? `The user's name is ${name}.` : ''} Be conversational and helpful. Keep responses brief (2-3 sentences max).`;
+            
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${config.openaiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: [
+                        { role: 'system', content: systemMsg },
+                        { role: 'user', content: text }
+                    ]
+                })
+            });
+            
+            if (!response.ok) throw new Error('OpenAI API error');
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // Settings Functions
         function openSettings() {
             document.getElementById('settingsModal').classList.remove('hidden');
             document.getElementById('aiMode').value = config.mode;
             document.getElementById('geminiKey').value = config.geminiKey;
             document.getElementById('openaiKey').value = config.openaiKey;
             document.getElementById('autoSpeak').checked = config.autoSpeak;
+            document.getElementById('continuousListen').checked = config.continuousListen;
             document.getElementById('voiceSpeed').value = config.voiceSpeed;
             document.getElementById('voiceNum').value = config.voiceNum;
+            document.getElementById('userName').value = config.userName;
+            document.getElementById('personality').value = config.personality;
             document.getElementById('speedVal').textContent = config.voiceSpeed;
             toggleAISettings();
         }
@@ -178,212 +672,48 @@
             config.geminiKey = document.getElementById('geminiKey').value;
             config.openaiKey = document.getElementById('openaiKey').value;
             config.autoSpeak = document.getElementById('autoSpeak').checked;
+            config.continuousListen = document.getElementById('continuousListen').checked;
             config.voiceSpeed = parseFloat(document.getElementById('voiceSpeed').value);
             config.voiceNum = parseInt(document.getElementById('voiceNum').value);
+            config.userName = document.getElementById('userName').value;
+            config.personality = document.getElementById('personality').value;
             
-            localStorage.setItem('config', JSON.stringify(config));
-            updateStatus();
+            saveConfig();
             closeSettings();
-            alert('✅ Settings saved!');
+            greetUser();
+            
+            // Apply continuous listen if enabled
+            if (config.continuousListen && !isListening) {
+                recognition.start();
+            } else if (!config.continuousListen && isListening) {
+                recognition.stop();
+            }
+            
+            showToast('✅ All settings saved!');
+        }
+
+        function saveConfig() {
+            localStorage.setItem('config', JSON.stringify(config));
         }
 
         function loadConfig() {
             const saved = localStorage.getItem('config');
             if (saved) {
-                config = JSON.parse(saved);
-                updateStatus();
-            }
-        }
-
-        function updateStatus() {
-            const modes = {
-                'rules': '🔧 Rules',
-                'gemini': '✨ Gemini',
-                'openai': '🤖 OpenAI'
-            };
-            document.getElementById('statusText').textContent = modes[config.mode] || 'Ready';
-        }
-
-        async function testAPI() {
-            if (config.mode === 'rules') {
-                alert('✅ Rule-based mode works offline!');
-                return;
-            }
-            alert('🧪 Testing...');
-            try {
-                const response = await getAIResponse('Say hello in Scottish');
-                alert('✅ Success! ' + response.substring(0, 50) + '...');
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
-        }
-
-        function initVoice() {
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                
-                recognition.onresult = (event) => {
-                    const text = event.results[0][0].transcript;
-                    document.getElementById('input').value = text;
-                    setTimeout(() => send(), 300);
-                };
-                
-                recognition.onerror = () => {
-                    document.getElementById('voiceBtn').classList.remove('animate-pulse');
-                };
-                
-                recognition.onend = () => {
-                    document.getElementById('voiceBtn').classList.remove('animate-pulse');
-                };
-            } else {
-                document.getElementById('voiceBtn').style.display = 'none';
-            }
-        }
-
-        function startVoice() {
-            if (!recognition) {
-                alert('Voice not supported. Use Chrome or Edge.');
-                return;
-            }
-            recognition.start();
-            document.getElementById('voiceBtn').classList.add('animate-pulse');
-        }
-
-        function speak(text) {
-            if (!config.autoSpeak) return;
-            synthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = config.voiceSpeed;
-            utterance.pitch = 1.0;
-            
-            const voices = synthesis.getVoices();
-            if (voices[config.voiceNum]) {
-                utterance.voice = voices[config.voiceNum];
+                config = {...config, ...JSON.parse(saved)};
             }
             
-            synthesis.speak(utterance);
-        }
-
-        function testVoice() {
-            speak("Hello! This is I-Stein speaking. How do you like my voice?");
-        }
-
-        function send() {
-            const input = document.getElementById('input');
-            const text = input.value.trim();
-            if (!text) return;
+            const savedNotes = localStorage.getItem('notes');
+            if (savedNotes) notes = JSON.parse(savedNotes);
             
-            addMessage(text, 'user');
-            input.value = '';
+            const savedTodos = localStorage.getItem('todos');
+            if (savedTodos) todos = JSON.parse(savedTodos);
             
-            setTimeout(async () => {
-                try {
-                    const response = await getAIResponse(text);
-                    addMessage(response, 'bot');
-                    speak(response);
-                } catch (error) {
-                    addMessage('Och! Error: ' + error.message, 'bot');
-                }
-            }, 100);
-        }
-
-        function addMessage(text, sender) {
-            messages.push({ text, sender, time: Date.now() });
-            render();
-            saveMessages();
-        }
-
-        function render() {
-            const container = document.getElementById('messages');
-            if (messages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-500 mt-20">
-                        <div class="text-6xl mb-4">🤖</div>
-                        <p class="text-lg font-medium">Hello! How can I help you?</p>
-                        <p class="text-sm mt-2">Try voice #5 (UK Female) for best results!</p>
-                    </div>
-                `;
-                return;
+            // Auto-start continuous listen if enabled
+            if (config.continuousListen) {
+                setTimeout(() => {
+                    if (recognition) recognition.start();
+                }, 1000);
             }
-            
-            let html = '';
-            messages.forEach(msg => {
-                const isUser = msg.sender === 'user';
-                html += `
-                    <div class="flex gap-2 ${isUser ? 'flex-row-reverse' : ''}">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xl ${isUser ? 'bg-indigo-600 text-white' : 'bg-gray-300'}">
-                            ${isUser ? '👤' : '🤖'}
-                        </div>
-                        <div class="max-w-[70%] rounded-2xl px-4 py-2 ${isUser ? 'bg-indigo-600 text-white' : 'bg-white shadow'}">
-                            ${msg.text}
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        async function getAIResponse(text) {
-            if (config.mode === 'rules') {
-                return getRuleResponse(text);
-            } else if (config.mode === 'gemini') {
-                if (!config.geminiKey) throw new Error('Gemini API key not set');
-                return await callGemini(text);
-            } else if (config.mode === 'openai') {
-                if (!config.openaiKey) throw new Error('OpenAI API key not set');
-                return await callOpenAI(text);
-            }
-        }
-
-        function getRuleResponse(msg) {
-            const m = msg.toLowerCase();
-            if (m.match(/hi|hello|hey/)) return "Hello! I'm I-Stein. How can I help you?";
-            if (m.match(/how are you/)) return "I'm doing great! Thanks for asking.";
-            if (m.match(/thank/)) return "You're welcome!";
-            if (m.match(/bye/)) return "Goodbye! Come back anytime!";
-            if (m.match(/time|date/)) return `It's ${new Date().toLocaleString()}`;
-            if (m.match(/voice/)) return "I can speak! Turn on auto-speak in settings and try voice number 5 for a nice British accent!";
-            return "That's interesting! Tell me more about that.";
-        }
-
-        async function callGemini(text) {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${config.geminiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: "You are I-Stein, a helpful and friendly AI assistant. Speak naturally and be conversational. Be brief and helpful.\n\nUser: " + text + "\n\nAssistant:" }]
-                    }]
-                })
-            });
-            
-            if (!response.ok) throw new Error('Gemini API error');
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
-        }
-
-        async function callOpenAI(text) {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${config.openaiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4o-mini',
-                    messages: [
-                        { role: 'system', content: 'You are I-Stein, a helpful and friendly AI assistant. Speak naturally and be conversational. Be brief and helpful.' },
-                        { role: 'user', content: text }
-                    ]
-                })
-            });
-            
-            if (!response.ok) throw new Error('OpenAI API error');
-            const data = await response.json();
-            return data.choices[0].message.content;
         }
 
         function saveMessages() {
@@ -399,10 +729,10 @@
         }
 
         function clearChat() {
-            if (confirm('Clear chat?')) {
+            if (confirm('Clear chat history?')) {
                 messages = [];
                 localStorage.removeItem('messages');
-                render();
+                location.reload();
             }
         }
     </script>
