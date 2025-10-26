@@ -267,7 +267,7 @@
         }
 
         function testVoice() {
-            speak("Och aye! This is I-Stein speakin' tae ye. How dae ye like ma voice?");
+            speak("Hello! This is I-Stein speaking. How do you like my voice?");
         }
 
         function send() {
@@ -301,7 +301,7 @@
                 container.innerHTML = `
                     <div class="text-center text-gray-500 mt-20">
                         <div class="text-6xl mb-4">🤖</div>
-                        <p class="text-lg font-medium">Och aye! How can I help ye?</p>
+                        <p class="text-lg font-medium">Hello! How can I help you?</p>
                         <p class="text-sm mt-2">Try voice #5 (UK Female) for best results!</p>
                     </div>
                 `;
@@ -340,13 +340,13 @@
 
         function getRuleResponse(msg) {
             const m = msg.toLowerCase();
-            if (m.match(/hi|hello|hey/)) return "Och, hello there! I'm I-Stein. How can I help ye?";
-            if (m.match(/how are you/)) return "Aye, I'm doing braw! Thanks fer askin'.";
-            if (m.match(/thank/)) return "Och, yer most welcome!";
-            if (m.match(/bye/)) return "Cheerio! Come back anytime!";
+            if (m.match(/hi|hello|hey/)) return "Hello! I'm I-Stein. How can I help you?";
+            if (m.match(/how are you/)) return "I'm doing great! Thanks for asking.";
+            if (m.match(/thank/)) return "You're welcome!";
+            if (m.match(/bye/)) return "Goodbye! Come back anytime!";
             if (m.match(/time|date/)) return `It's ${new Date().toLocaleString()}`;
-            if (m.match(/voice/)) return "I can speak! Turn on auto-speak in settings and try voice number 5 fer a bonnie British accent!";
-            return "That's interesting! Tell me more aboot that.";
+            if (m.match(/voice/)) return "I can speak! Turn on auto-speak in settings and try voice number 5 for a nice British accent!";
+            return "That's interesting! Tell me more about that.";
         }
 
         async function callGemini(text) {
@@ -355,7 +355,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{
-                        parts: [{ text: "You are I-Stein, a helpful Scottish assistant. Use Scottish dialect. Be brief.\n\nUser: " + text + "\n\nAssistant:" }]
+                        parts: [{ text: "You are I-Stein, a helpful and friendly AI assistant. Speak naturally and be conversational. Be brief and helpful.\n\nUser: " + text + "\n\nAssistant:" }]
                     }]
                 })
             });
@@ -375,7 +375,7 @@
                 body: JSON.stringify({
                     model: 'gpt-4o-mini',
                     messages: [
-                        { role: 'system', content: 'You are I-Stein, a helpful Scottish assistant. Use Scottish dialect. Be brief.' },
+                        { role: 'system', content: 'You are I-Stein, a helpful and friendly AI assistant. Speak naturally and be conversational. Be brief and helpful.' },
                         { role: 'user', content: text }
                     ]
                 })
