@@ -572,63 +572,39 @@
                 const data = await response.json();
                 
                 // Build result from DuckDuckGo data
-                let result = `🔍 **Search Results: "${query}"**
-
-`;
+                let result = `🔍 **Search Results: "${query}"**\n\n`;
                 
                 if (data.AbstractText) {
-                    result += `**${data.Heading || query}**
-${data.AbstractText}
-`;
+                    result += `**${data.Heading || query}**\n${data.AbstractText}\n`;
                     if (data.AbstractURL) {
-                        result += `
-🔗 ${data.AbstractURL}
-`;
+                        result += `\n🔗 ${data.AbstractURL}\n`;
                     }
                 } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    result += `**Related topics:**
-
-`;
+                    result += `**Related topics:**\n\n`;
                     data.RelatedTopics.slice(0, 5).forEach((topic, i) => {
                         if (topic.Text) {
                             const text = topic.Text.length > 150 ? topic.Text.substring(0, 150) + '...' : topic.Text;
-                            result += `${i + 1}. ${text}
-`;
+                            result += `${i + 1}. ${text}\n`;
                             if (topic.FirstURL) {
-                                result += `   🔗 ${topic.FirstURL}
-`;
+                                result += `   🔗 ${topic.FirstURL}\n`;
                             }
-                            result += `
-`;
+                            result += `\n`;
                         }
                     });
                 } else {
                     // No direct results, suggest alternatives
-                    result += `No instant answer found. Try:
-
-`;
-                    result += `• Google: google.com/search?q=${encodeURIComponent(query)}
-`;
-                    result += `• Wikipedia: /wiki ${query}
-`;
-                    result += `• Ask a more specific question
-`;
+                    result += `No instant answer found. Try:\n\n`;
+                    result += `• Google: google.com/search?q=${encodeURIComponent(query)}\n`;
+                    result += `• Wikipedia: /wiki ${query}\n`;
+                    result += `• Ask a more specific question\n`;
                 }
                 
                 return result;
                 
             } catch (error) {
                 console.error('Search error:', error);
-                return `🔍 **Search: "${query}"**
-
-⚠️ Search service unavailable.
-
-**Try these instead:**
-• Google: google.com/search?q=${encodeURIComponent(query)}
-• Wikipedia: /wiki ${query}
-• Dictionary: /define ${query}`;
+                return `🔍 **Search: "${query}"**\n\n⚠️ Search service unavailable.\n\n**Try these instead:**\n• Google: google.com/search?q=${encodeURIComponent(query)}\n• Wikipedia: /wiki ${query}\n• Dictionary: /define ${query}`;
             }
-        }"**\n\nI found this topic! Here are some suggestions:\n\n**Try these:**\n• Open Google: google.com/search?q=${encodeURIComponent(query)}\n• Use /wiki ${query} for Wikipedia\n• Ask me a specific question about this topic\n\n**Or I can help with:**\n• Weather: /weather [city]\n• Currency: /currency [amount] USD to EUR\n• Dictionary: /define [word]\n• Wikipedia: /wiki ${query}`;
         }
 
         async function searchWikipedia(topic) {
