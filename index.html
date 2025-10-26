@@ -1,988 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I-Stein Super Powered</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes typing {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-        .typing-dot { animation: typing 1.4s infinite; }
-        .listening-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .slide-in { animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I‑Stein ⚡ Super Powered (Single Cleaned HTML)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes typing { 0%,100%{opacity:.3} 50%{opacity:1} }
+    .typing-dot{animation:typing 1.4s infinite}
+    .listening-pulse{animation:pulse 1.5s cubic-bezier(.4,0,.6,1) infinite}
+    @keyframes pulse {0%,100%{opacity:1} 50%{opacity:.5}}
+    .slide-in{animation:slideIn .3s ease-out}
+    @keyframes slideIn{from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)}}
+    .result-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
+  </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 my-8 max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">⚙️ Super Powered Settings</h2>
-                    <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                </div>
-
-                <!-- AI Mode -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">AI Mode</label>
-                    <select id="aiMode" onchange="toggleAISettings()" class="w-full px-4 py-2 border rounded-lg">
-                        <option value="rules">🔧 Rule-Based (Free, Offline)</option>
-                        <option value="gemini">✨ Google Gemini (Free!)</option>
-                        <option value="openai">🤖 OpenAI ChatGPT</option>
-                    </select>
-                </div>
-
-                <div id="geminiSettings" class="hidden mb-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
-                    <h3 class="font-semibold mb-2">✨ Google Gemini</h3>
-                    <input type="password" id="geminiKey" placeholder="AIzaSy..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
-                    <p class="text-xs text-gray-600">Get FREE key: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-blue-600 underline">Google AI Studio</a></p>
-                </div>
-
-                <div id="openaiSettings" class="hidden mb-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-                    <h3 class="font-semibold mb-2">🤖 OpenAI</h3>
-                    <input type="password" id="openaiKey" placeholder="sk-proj-..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
-                </div>
-
-                <!-- API Keys for Internet Features -->
-                <div class="mb-4 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-200">
-                    <h3 class="font-semibold mb-3">🌐 Internet Features (Optional)</h3>
-                    
-                    <label class="block text-sm font-medium mb-1">Weather API Key (OpenWeather):</label>
-                    <input type="password" id="weatherKey" placeholder="Optional - Get free at openweathermap.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
-                    
-                    <label class="block text-sm font-medium mb-1">News API Key (NewsAPI):</label>
-                    <input type="password" id="newsKey" placeholder="Optional - Get free at newsapi.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
-                    
-                    <div class="text-xs text-gray-600 bg-white p-3 rounded">
-                        <strong>📝 Note:</strong> Search & Wikipedia work without keys! Weather & News need free API keys (optional).
-                        <br><br>
-                        <strong>Get free keys:</strong><br>
-                        • Weather: <a href="https://openweathermap.org/api" target="_blank" class="text-blue-600 underline">openweathermap.org</a> (1000 calls/day free)<br>
-                        • News: <a href="https://newsapi.org" target="_blank" class="text-blue-600 underline">newsapi.org</a> (100 calls/day free)
-                    </div>
-                </div>
-
-                <!-- Voice Settings -->
-                <div class="mb-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
-                    <h3 class="font-semibold mb-3">🎤 Voice</h3>
-                    <label class="flex items-center gap-2 mb-3">
-                        <input type="checkbox" id="continuousListen" class="w-4 h-4"/>
-                        <span class="text-sm font-medium">🎙️ Always Listen</span>
-                    </label>
-                    <label class="flex items-center gap-2 mb-3">
-                        <input type="checkbox" id="autoSpeak" class="w-4 h-4"/>
-                        <span class="text-sm font-medium">Auto-speak responses</span>
-                    </label>
-                    <label class="block text-sm mb-1">Voice #: <input type="number" id="voiceNum" min="0" max="21" value="5" class="w-20 px-2 py-1 border rounded"/></label>
-                    <label class="block text-sm mb-1">Speed: <span id="speedVal">1.3</span>x</label>
-                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.3" class="w-full mb-2" oninput="document.getElementById('speedVal').textContent = this.value"/>
-                </div>
-
-                <!-- Personality -->
-                <div class="mb-4 p-4 bg-pink-50 rounded-lg border-2 border-pink-200">
-                    <h3 class="font-semibold mb-3">😊 Personality</h3>
-                    <label class="block text-sm mb-1">Your Name:</label>
-                    <input type="text" id="userName" placeholder="Optional" class="w-full px-4 py-2 border rounded-lg mb-3"/>
-                    <label class="block text-sm mb-1">Style:</label>
-                    <select id="personality" class="w-full px-4 py-2 border rounded-lg">
-                        <option value="friendly">😊 Friendly</option>
-                        <option value="professional">💼 Professional</option>
-                        <option value="funny">😂 Funny</option>
-                        <option value="motivational">💪 Motivational</option>
-                    </select>
-                </div>
-
-                <button onclick="saveSettings()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium">💾 Save All Settings</button>
-            </div>
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 my-8 max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">⚙️ Super Powered Settings</h2>
+          <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
         </div>
+
+        <!-- AI Mode -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">AI Mode</label>
+          <select id="aiMode" onchange="toggleAISettings()" class="w-full px-4 py-2 border rounded-lg">
+            <option value="rules">🔧 Rule-Based (Free, Offline)</option>
+            <option value="gemini">✨ Google Gemini (Free key)</option>
+            <option value="openai">🤖 OpenAI ChatGPT (key required)</option>
+          </select>
+        </div>
+
+        <div id="geminiSettings" class="hidden mb-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
+          <h3 class="font-semibold mb-2">✨ Google Gemini</h3>
+          <input type="password" id="geminiKey" placeholder="AIzaSy..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
+          <p class="text-xs text-gray-600">Get a free key at <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-blue-600 underline">Google AI Studio</a></p>
+        </div>
+
+        <div id="openaiSettings" class="hidden mb-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+          <h3 class="font-semibold mb-2">🤖 OpenAI</h3>
+          <input type="password" id="openaiKey" placeholder="sk-..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
+          <p class="text-xs text-gray-600">For production, route through your own backend/proxy — avoid exposing keys client-side.</p>
+        </div>
+
+        <!-- Internet (Optional) -->
+        <div class="mb-4 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-200">
+          <h3 class="font-semibold mb-3">🌐 Internet Features (Optional)</h3>
+          <label class="block text-sm font-medium mb-1">Weather API Key (OpenWeather):</label>
+          <input type="password" id="weatherKey" placeholder="Optional - openweathermap.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
+          <label class="block text-sm font-medium mb-1">News API Key (NewsAPI):</label>
+          <input type="password" id="newsKey" placeholder="Optional - newsapi.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
+          <div class="text-xs text-gray-600 bg-white p-3 rounded">
+            <strong>Note:</strong> Search & Wikipedia work without keys. Weather/News need free keys.
+          </div>
+        </div>
+
+        <!-- Voice -->
+        <div class="mb-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+          <h3 class="font-semibold mb-3">🎤 Voice</h3>
+          <label class="flex items-center gap-2 mb-3">
+            <input type="checkbox" id="continuousListen" class="w-4 h-4"/>
+            <span class="text-sm font-medium">🎙️ Always Listen</span>
+          </label>
+          <label class="flex items-center gap-2 mb-3">
+            <input type="checkbox" id="autoSpeak" class="w-4 h-4"/>
+            <span class="text-sm font-medium">Auto-speak responses</span>
+          </label>
+          <label class="block text-sm mb-1">Voice #:
+            <input type="number" id="voiceNum" min="0" max="21" value="5" class="w-20 px-2 py-1 border rounded"/>
+          </label>
+          <label class="block text-sm mb-1">Speed: <span id="speedVal">1.3</span>x</label>
+          <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.3" class="w-full mb-2" oninput="document.getElementById('speedVal').textContent=this.value"/>
+        </div>
+
+        <!-- Personality -->
+        <div class="mb-4 p-4 bg-pink-50 rounded-lg border-2 border-pink-200">
+          <h3 class="font-semibold mb-3">😊 Personality</h3>
+          <label class="block text-sm mb-1">Your Name:</label>
+          <input type="text" id="userName" placeholder="Optional" class="w-full px-4 py-2 border rounded-lg mb-3"/>
+          <label class="block text-sm mb-1">Style:</label>
+          <select id="personality" class="w-full px-4 py-2 border rounded-lg">
+            <option value="friendly">😊 Friendly</option>
+            <option value="professional">💼 Professional</option>
+            <option value="funny">😂 Funny</option>
+            <option value="motivational">💪 Motivational</option>
+          </select>
+        </div>
+
+        <button onclick="saveSettings()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium">💾 Save All Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <div class="bg-white shadow-md px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-2 rounded-full relative">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="2" fill="white"/>
+            <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/>
+            <path d="M12 2v4m0 12v4m10-10h-4m-12 0H2" stroke="white" stroke-width="2"/>
+          </svg>
+          <span id="listeningIndicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full listening-pulse"></span>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">I‑Stein ⚡ Super Powered</h1>
+          <p class="text-xs text-gray-500" id="statusText">Ready with internet access!</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="showCommands()" class="p-2 hover:bg-gray-100 rounded-full" title="Commands">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+        <button onclick="openSettings()" class="p-2 hover:bg-gray-100 rounded-full" title="Settings">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+        <button onclick="clearChat()" class="p-2 hover:bg-gray-100 rounded-full" title="Clear">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
     </div>
 
-    <!-- Main App -->
-    <div class="flex flex-col h-screen">
-        <!-- Header -->
-        <div class="bg-white shadow-md px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-2 rounded-full relative">
-                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="2" fill="white"/>
-                        <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/>
-                        <path d="M12 2v4m0 12v4m10-10h-4m-12 0H2" stroke="white" stroke-width="2"/>
-                    </svg>
-                    <span id="listeningIndicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full listening-pulse"></span>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">I-Stein ⚡ Super Powered</h1>
-                    <p class="text-xs text-gray-500" id="statusText">Ready with internet access!</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="showCommands()" class="p-2 hover:bg-gray-100 rounded-full" title="Commands">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </button>
-                <button onclick="openSettings()" class="p-2 hover:bg-gray-100 rounded-full" title="Settings">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                </button>
-                <button onclick="clearChat()" class="p-2 hover:bg-gray-100 rounded-full" title="Clear">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                </button>
-            </div>
+    <!-- Messages -->
+    <div id="messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div class="text-center text-gray-500 mt-20">
+        <div class="text-6xl mb-4">🚀⚡</div>
+        <p class="text-lg font-medium" id="welcomeMsg">I'm I‑Stein Super Powered!</p>
+        <p class="text-sm mt-2">Now with internet search, weather, news & more!</p>
+        <div class="mt-4 flex gap-2 justify-center flex-wrap">
+          <button onclick="quickAction('/search latest AI news')" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow rounded-full text-sm hover:shadow-lg">🔍 Search</button>
+          <button onclick="quickAction('/weather New York')" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow rounded-full text-sm hover:shadow-lg">🌤️ Weather</button>
+          <button onclick="quickAction('/help')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">📚 Commands</button>
         </div>
-
-        <!-- Messages -->
-        <div id="messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-            <div class="text-center text-gray-500 mt-20">
-                <div class="text-6xl mb-4">🚀⚡</div>
-                <p class="text-lg font-medium" id="welcomeMsg">I'm I-Stein Super Powered!</p>
-                <p class="text-sm mt-2">Now with internet search, weather, news & more!</p>
-                <div class="mt-4 flex gap-2 justify-center flex-wrap">
-                    <button onclick="quickAction('/search latest AI news')" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow rounded-full text-sm hover:shadow-lg">🔍 Search</button>
-                    <button onclick="quickAction('/weather New York')" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow rounded-full text-sm hover:shadow-lg">🌤️ Weather</button>
-                    <button onclick="quickAction('/help')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">📚 Commands</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Input -->
-        <div class="bg-white border-t px-4 py-3">
-            <div class="flex gap-2 max-w-4xl mx-auto">
-                <button onclick="toggleContinuousListen()" id="voiceBtn" class="bg-red-500 text-white p-3 rounded-full hover:bg-red-600" title="Toggle Always Listen">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-                    </svg>
-                </button>
-                <input type="text" id="input" placeholder="Ask anything or use /commands..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500" onkeypress="if(event.key==='Enter')send()"/>
-                <button onclick="send()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-full hover:shadow-lg">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script>
-        let messages = [];
-        let config = {
-            mode: 'rules',
-            geminiKey: '',
-            openaiKey: '',
-            weatherKey: '',
-            newsKey: '',
-            autoSpeak: false,
-            continuousListen: false,
-            voiceSpeed: 1.3,
-            voiceNum: 5,
-            userName: '',
-            personality: 'friendly'
+    <!-- Input -->
+    <div class="bg-white border-t px-4 py-3">
+      <div class="flex gap-2 max-w-4xl mx-auto">
+        <button onclick="toggleContinuousListen()" id="voiceBtn" class="bg-red-500 text-white p-3 rounded-full hover:bg-red-600" title="Toggle Always Listen">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+        </button>
+        <input type="text" id="input" placeholder="Ask anything or use /commands..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500" onkeypress="if(event.key==='Enter')send()"/>
+        <button onclick="send()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-full hover:shadow-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------- Config & State --------------------
+    let messages = [];
+    let recognition = null;
+    let synthesis = window.speechSynthesis;
+    let isListening = false;
+    let notes = [];
+    let todos = [];
+
+    const REQUEST_TIMEOUT_MS = 25000; // kill hung calls
+    let inFlight = null;              // lock to prevent overlapping
+    let lastSTT = "";                // de-dupe STT
+    let wasListeningBeforeSpeak = false;
+
+    let config = {
+      mode: 'rules',
+      geminiKey: '',
+      openaiKey: '',
+      weatherKey: '',
+      newsKey: '',
+      autoSpeak: false,
+      continuousListen: false,
+      voiceSpeed: 1.3,
+      voiceNum: 5,
+      userName: '',
+      personality: 'friendly'
+    };
+
+    // -------------------- Boot --------------------
+    window.onload = () => {
+      loadConfig();
+      loadMessages();
+      initVoice();
+      greetUser();
+      updateStatus();
+    };
+
+    function greetUser(){
+      if(config.userName){
+        document.getElementById('welcomeMsg').textContent = `Hello ${config.userName}! I'm Super Powered! 🚀`;
+        document.getElementById('statusText').textContent = `Hey ${config.userName}! Internet ready!`;
+      }
+    }
+
+    function updateStatus(){
+      const modeStr = config.mode ? config.mode.toUpperCase() : 'RULES';
+      const keyBadge = (config.mode==='gemini' && config.geminiKey) ? ' 🔑' : (config.mode==='openai' && config.openaiKey) ? ' 🔑' : '';
+      document.getElementById('statusText').textContent = `Mode: ${modeStr}${keyBadge} • Internet ready!`;
+    }
+
+    // -------------------- Voice (ASR/TTS) --------------------
+    function initVoice(){
+      if('webkitSpeechRecognition' in window){
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          isListening = true;
+          document.getElementById('listeningIndicator').classList.remove('hidden');
+          document.getElementById('voiceBtn').classList.add('bg-green-500');
+          document.getElementById('voiceBtn').classList.remove('bg-red-500');
         };
-        let recognition = null;
-        let synthesis = window.speechSynthesis;
-        let isListening = false;
-        let notes = [];
-        let todos = [];
-
-        window.onload = () => {
-            loadConfig();
-            loadMessages();
-            initVoice();
-            greetUser();
+        recognition.onend = () => {
+          isListening = false;
+          document.getElementById('listeningIndicator').classList.add('hidden');
+          document.getElementById('voiceBtn').classList.remove('bg-green-500');
+          document.getElementById('voiceBtn').classList.add('bg-red-500');
+          if(config.continuousListen){ setTimeout(()=>{ try{recognition.start()}catch(e){} }, 500); }
         };
+        recognition.onspeechend = () => {
+          if(config.continuousListen){ setTimeout(()=>{ try{recognition.start()}catch(e){} }, 350); }
+        };
+        recognition.onresult = (event) => {
+          const txt = event.results[event.results.length-1][0].transcript.trim();
+          if(!txt || txt===lastSTT) return;
+          lastSTT = txt;
+          document.getElementById('input').value = txt;
+          setTimeout(()=>send(), 200);
+        };
+        recognition.onerror = (error) => {
+          isListening = false;
+          document.getElementById('listeningIndicator').classList.add('hidden');
+          if(config.continuousListen && (error.error==='no-speech' || error.error==='network')){
+            setTimeout(()=>{ try{recognition.start()}catch(e){} }, 800);
+          }
+        };
+      } else {
+        document.getElementById('voiceBtn').style.display = 'none';
+      }
+    }
 
-        function greetUser() {
-            if (config.userName) {
-                document.getElementById('welcomeMsg').textContent = `Hello ${config.userName}! I'm Super Powered! 🚀`;
-                document.getElementById('statusText').textContent = `Hey ${config.userName}! Internet ready!`;
-            }
+    function toggleContinuousListen(){
+      config.continuousListen = !config.continuousListen;
+      saveConfig();
+      if(config.continuousListen){ recognition && recognition.start(); showToast('🎙️ Always listening ON!'); }
+      else { recognition && recognition.stop(); showToast('🎙️ Manual mode.'); }
+    }
+
+    function speak(text){
+      if(!config.autoSpeak || !text) return;
+      if(recognition && isListening){ wasListeningBeforeSpeak = true; recognition.stop(); } else { wasListeningBeforeSpeak = false; }
+      synthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = config.voiceSpeed;
+      const voices = synthesis.getVoices();
+      if(voices[config.voiceNum]) utter.voice = voices[config.voiceNum];
+      utter.onend = ()=>{
+        if(recognition && config.continuousListen && wasListeningBeforeSpeak){ setTimeout(()=>recognition.start(), 300); }
+      };
+      synthesis.speak(utter);
+    }
+
+    // -------------------- Networking Helpers --------------------
+    async function withTimeout(doFetch, ms){
+      const controller = new AbortController();
+      const to = setTimeout(()=>controller.abort(new Error('Timeout')), ms);
+      try {
+        const res = await doFetch(controller.signal);
+        clearTimeout(to);
+        return res;
+      } catch(e){
+        clearTimeout(to);
+        throw (e.name==='AbortError') ? new Error('Request timed out') : e;
+      }
+    }
+
+    // -------------------- AI Calls --------------------
+    async function getAIResponse(userText){
+      if(inFlight){ return '⏳ Still answering the previous request…'; }
+      inFlight = true;
+      try{
+        switch(config.mode){
+          case 'rules': return ruleBot(userText);
+          case 'gemini':
+            if(!config.geminiKey) throw new Error('Gemini key missing. Open Settings → enter key.');
+            return await callGemini(userText);
+          case 'openai':
+            if(!config.openaiKey) throw new Error('OpenAI key missing. Open Settings → enter key.');
+            return await callOpenAI(userText);
+          default: return 'Unknown AI mode';
         }
+      } finally { inFlight = false; }
+    }
 
-        function initVoice() {
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = false;
-                
-                recognition.onstart = () => {
-                    isListening = true;
-                    document.getElementById('listeningIndicator').classList.remove('hidden');
-                    document.getElementById('voiceBtn').classList.add('bg-green-500');
-                    document.getElementById('voiceBtn').classList.remove('bg-red-500');
-                };
-                
-                recognition.onend = () => {
-                    isListening = false;
-                    document.getElementById('listeningIndicator').classList.add('hidden');
-                    document.getElementById('voiceBtn').classList.remove('bg-green-500');
-                    document.getElementById('voiceBtn').classList.add('bg-red-500');
-                    if (config.continuousListen) {
-                        setTimeout(() => recognition.start(), 500);
-                    }
-                };
-                
-                recognition.onresult = (event) => {
-                    const text = event.results[event.results.length - 1][0].transcript;
-                    document.getElementById('input').value = text;
-                    setTimeout(() => send(), 300);
-                };
-                
-                recognition.onerror = (error) => {
-                    if (error.error !== 'no-speech') {
-                        isListening = false;
-                        document.getElementById('listeningIndicator').classList.add('hidden');
-                    }
-                };
-            } else {
-                document.getElementById('voiceBtn').style.display = 'none';
-            }
+    function ruleBot(t){
+      const lc = t.toLowerCase();
+      if(lc.includes('hello')||lc.includes('hi')) return "Hey! I’m Super Powered. What can I do?";
+      if(lc.startsWith('/')) return "Try /help for commands.";
+      return "Got it. Switch to ✨ Gemini or 🤖 OpenAI in Settings for smarter replies.";
+    }
+
+    async function callGemini(prompt){
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${encodeURIComponent(config.geminiKey)}`;
+      const body = { contents:[{ role:'user', parts:[{ text: prompt }]}], generationConfig:{ temperature:0.8, maxOutputTokens:512 } };
+      const doFetch = (signal)=> fetch(url,{ method:'POST', signal, headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })
+        .then(r=>{ if(!r.ok) throw new Error(`Gemini HTTP ${r.status}`); return r.json(); });
+      const data = await withTimeout(doFetch, REQUEST_TIMEOUT_MS);
+      const cand = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(!cand) throw new Error('Empty response from Gemini');
+      return cand.trim();
+    }
+
+    async function callOpenAI(prompt){
+      // NOTE: For production, proxy this on your server to protect keys.
+      const url = 'https://api.openai.com/v1/responses';
+      const doFetch = (signal)=> fetch(url, {
+        method:'POST', signal,
+        headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${config.openaiKey}` },
+        body: JSON.stringify({ model:'gpt-4o-mini', input: prompt, max_output_tokens:512 })
+      }).then(r=>{ if(!r.ok) throw new Error(`OpenAI HTTP ${r.status}`); return r.json(); });
+      const data = await withTimeout(doFetch, REQUEST_TIMEOUT_MS);
+      const txt = data?.output_text || data?.output?.[0]?.content?.[0]?.text;
+      if(!txt) throw new Error('Empty response from OpenAI');
+      return txt.trim();
+    }
+
+    // -------------------- Send / Commands --------------------
+    async function send(){
+      const input = document.getElementById('input');
+      const text = input.value.trim();
+      if(!text) return;
+
+      if(text.startsWith('/')){ await handleCommand(text); input.value=''; return; }
+      if(inFlight){ addMessage('⏳ Working on your previous request…', 'bot'); return; }
+
+      addMessage(text,'user');
+      input.value='';
+      showTyping();
+      try{
+        const response = await getAIResponse(text);
+        hideTyping();
+        addMessage(response,'bot', getQuickReplies(response));
+        speak(response);
+      } catch(error){
+        hideTyping();
+        addMessage(`⚠️ ${error.message || 'Request failed. Try again.'}`,'bot');
+      }
+    }
+
+    async function handleCommand(cmd){
+      const parts = cmd.split(' ');
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1).join(' ');
+      showTyping();
+      try{
+        switch(command){
+          case '/help': hideTyping(); addMessage(
+            `🚀 **I‑Stein Commands**\n\n`+
+            `**Internet & Search**\n`+
+            `• /search [query]\n• /wiki [topic]\n• /news [topic]\n• /weather [city]\n• /currency [amt] [from] to [to]\n• /define [word]\n• /translate [text] to [lang]\n\n`+
+            `**Tools**\n`+
+            `• /calc [expr]\n• /time [city]\n• /note [text]\n• /notes\n• /todo [task]\n• /todos\n• /clear\n`, 'bot');
+            break;
+          case '/search':
+            if(!args){ hideTyping(); addMessage('Usage: /search your query here','bot'); break; }
+            const sr = await webSearch(args); hideTyping(); addMessage(sr,'bot');
+            break;
+          case '/wiki':
+            if(!args){ hideTyping(); addMessage('Usage: /wiki topic','bot'); break; }
+            const wk = await searchWikipedia(args); hideTyping(); addMessage(wk,'bot');
+            break;
+          case '/weather':
+            if(!args){ hideTyping(); addMessage('Usage: /weather city name','bot'); break; }
+            const w = await getWeather(args); hideTyping(); addMessage(w,'bot');
+            break;
+          case '/news':
+            const topic = args || 'latest';
+            const n = await getNews(topic); hideTyping(); addMessage(n,'bot');
+            break;
+          case '/currency':
+            const cur = await convertCurrency(args); hideTyping(); addMessage(cur,'bot');
+            break;
+          case '/define':
+            if(!args){ hideTyping(); addMessage('Usage: /define word','bot'); break; }
+            const def = await getDefinition(args); hideTyping(); addMessage(def,'bot');
+            break;
+          case '/translate':
+            const tr = await translateText(args); hideTyping(); addMessage(tr,'bot');
+            break;
+          case '/time':
+            const ti = await getTimeIn(args||'UTC'); hideTyping(); addMessage(ti,'bot');
+            break;
+          case '/joke': hideTyping(); addMessage('Why did the model cross the net? To reduce latency 🐔⚡','bot'); break;
+          case '/note':
+            hideTyping(); if(args){ notes.push({text:args,time:new Date().toLocaleString()}); localStorage.setItem('notes',JSON.stringify(notes)); addMessage(`📝 Note saved! Total: ${notes.length}`,'bot'); } else { addMessage('Usage: /note your text','bot'); } break;
+          case '/notes':
+            hideTyping(); if(!notes.length) addMessage('📝 No notes yet!','bot');
+            else { addMessage('📝 **Your Notes:**\n\n'+ notes.map((n,i)=>`${i+1}. ${n.text}`).join('\n'),'bot'); }
+            break;
+          case '/todo':
+            hideTyping(); if(args){ todos.push({task:args,done:false}); localStorage.setItem('todos',JSON.stringify(todos)); addMessage(`✅ Added! Total: ${todos.length}`,'bot'); } else { addMessage('Usage: /todo your task','bot'); } break;
+          case '/todos':
+            hideTyping(); if(!todos.length) addMessage('✅ No to-dos yet!','bot');
+            else { addMessage('✅ **To-Dos:**\n\n'+ todos.map((t,i)=>`${i+1}. ${t.done?'✓':'○'} ${t.task}`).join('\n'),'bot'); }
+            break;
+          case '/clear': hideTyping(); clearChat(); break;
+          default: hideTyping(); addMessage(`❓ Unknown: ${command} — type /help`,'bot');
         }
+      } catch(e){ hideTyping(); addMessage(`Error: ${e.message}`,'bot'); }
+    }
 
-        function toggleContinuousListen() {
-            config.continuousListen = !config.continuousListen;
-            saveConfig();
-            if (config.continuousListen) {
-                recognition.start();
-                showToast('🎙️ Always listening ON!');
-            } else {
-                recognition.stop();
-                showToast('🎙️ Manual mode.');
-            }
+    // -------------------- Internet Utils (lightweight) --------------------
+    async function webSearch(query){
+      try{
+        const r = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
+        const d = await r.json();
+        if(d.AbstractText) return `🔍 **${d.Heading}**\n\n${d.AbstractText}\n\n📖 ${d.AbstractURL||'DuckDuckGo'}`;
+        if(d.RelatedTopics?.length){
+          return '🔍 **Top Results:**\n\n'+ d.RelatedTopics.slice(0,3).map((t,i)=>`${i+1}. ${t.Text||''}`).join('\n\n');
         }
+        return `🔍 Searched for: "${query}" — no details found.`;
+      }catch(e){ return '❌ Search failed. Check your internet connection.'; }
+    }
 
-        function showToast(msg) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-20 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg slide-in z-50';
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+    async function searchWikipedia(topic){
+      try{
+        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
+        const d = await r.json();
+        if(d.extract) return `📚 **${d.title}**\n\n${d.extract}\n\n🔗 https://en.wikipedia.org/wiki/${encodeURIComponent(d.title)}`;
+        return `No article found for "${topic}".`;
+      }catch(e){ return '❌ Wikipedia request failed.'; }
+    }
 
-        function quickAction(text) {
-            document.getElementById('input').value = text;
-            send();
-        }
+    async function getWeather(city){
+      if(!config.weatherKey) return '🌤️ Add a Weather API key in Settings for live forecasts.';
+      try{
+        const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${config.weatherKey}&units=metric`);
+        const d = await r.json();
+        if(d.cod!==200) return 'Weather lookup failed.';
+        return `🌤️ **${d.name}**: ${d.weather[0].description}, ${d.main.temp}°C (feels ${d.main.feels_like}°C)`;
+      }catch(e){ return '❌ Weather fetch failed.'; }
+    }
 
-        function speak(text) {
-            if (!config.autoSpeak) return;
-            synthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = config.voiceSpeed;
-            const voices = synthesis.getVoices();
-            if (voices[config.voiceNum]) {
-                utterance.voice = voices[config.voiceNum];
-            }
-            synthesis.speak(utterance);
-        }
+    async function getNews(topic){
+      if(!config.newsKey) return '🗞️ Add a News API key in Settings for headlines.';
+      try{
+        const r = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(topic)}&pageSize=5&sortBy=publishedAt&apiKey=${config.newsKey}`);
+        const d = await r.json();
+        if(d.status!=='ok' || !d.articles?.length) return 'No news found.';
+        return '🗞️ **Top News**\n\n'+ d.articles.slice(0,3).map(a=>`• ${a.title} — ${a.source.name}`).join('\n');
+      }catch(e){ return '❌ News fetch failed.'; }
+    }
 
-        function send() {
-            const input = document.getElementById('input');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            if (text.startsWith('/')) {
-                handleCommand(text);
-                input.value = '';
-                return;
-            }
-            
-            addMessage(text, 'user');
-            input.value = '';
-            showTyping();
-            
-            setTimeout(async () => {
-                hideTyping();
-                try {
-                    const response = await getAIResponse(text);
-                    addMessage(response, 'bot', getQuickReplies(response));
-                    speak(response);
-                } catch (error) {
-                    addMessage('Error: ' + error.message, 'bot');
-                }
-            }, 800);
-        }
+    async function convertCurrency(args){
+      const m = args.match(/([\d.]+)\s*(\w+)\s*to\s*(\w+)/i);
+      if(!m) return 'Usage: /currency 100 USD to EUR';
+      const amt = parseFloat(m[1]); const from = m[2].toUpperCase(); const to = m[3].toUpperCase();
+      try{
+        const r = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amt}`);
+        const d = await r.json();
+        return `💱 ${amt} ${from} ≈ ${d.result?.toFixed(2)} ${to}`;
+      }catch(e){ return '❌ Currency convert failed.'; }
+    }
 
-        async function handleCommand(cmd) {
-            const parts = cmd.split(' ');
-            const command = parts[0].toLowerCase();
-            const args = parts.slice(1).join(' ');
-            
-            showTyping();
-            
-            try {
-                switch(command) {
-                    case '/help':
-                        hideTyping();
-                        addMessage(`🚀 **I-Stein Super Powered Commands:**
+    async function getDefinition(word){
+      try{
+        const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+        const d = await r.json();
+        const first = d[0];
+        if(!first) return 'No definition found.';
+        const def = first.meanings?.[0]?.definitions?.[0]?.definition || '—';
+        return `📖 **${first.word}** — ${def}`;
+      }catch(e){ return '❌ Dictionary lookup failed.'; }
+    }
 
-**🔍 Internet & Search:**
-• /search [query] - Web search
-• /wiki [topic] - Wikipedia lookup
-• /news [topic] - Latest news
-• /weather [city] - Weather forecast
-• /currency [amt] [from] to [to] - Convert (e.g., /currency 100 USD to EUR)
-• /define [word] - Dictionary
-• /translate [text] to [lang] - Translate
+    async function translateText(args){
+      const m = args.match(/(.+)\s+to\s+(\w+)/i);
+      if(!m) return 'Usage: /translate [text] to [lang]';
+      const text = m[1]; const lang = m[2];
+      try{
+        const r = await fetch('https://libretranslate.de/translate',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({q:text, source:'auto', target:lang}) });
+        const d = await r.json();
+        return `🌐 ${d.translatedText}`;
+      }catch(e){ return '❌ Translate failed.'; }
+    }
 
-**🛠️ Tools:**
-• /calc [expression] - Calculator
-• /time [city] - Time in city
-• /note [text] - Save note
-• /notes - View notes
-• /todo [task] - Add to-do
-• /todos - View to-dos
+    async function getTimeIn(city){
+      if(!city || city.toUpperCase()==='UTC') return `⏰ ${new Date().toUTCString()}`;
+      return `⏰ Time lookup for "${city}" not configured. Try /time UTC`;
+    }
 
-**🎉 Fun:**
-• /joke - Random joke
-• /fact - Interesting fact
-• /motivate - Motivation
-• /clear - Clear chat`, 'bot');
-                        break;
-                        
-                    case '/search':
-                        if (!args) {
-                            hideTyping();
-                            addMessage('Usage: /search your query here', 'bot');
-                            return;
-                        }
-                        const searchResults = await webSearch(args);
-                        hideTyping();
-                        addMessage(searchResults, 'bot', ['Search more', 'Thanks!']);
-                        break;
-                        
-                    case '/wiki':
-                        if (!args) {
-                            hideTyping();
-                            addMessage('Usage: /wiki topic', 'bot');
-                            return;
-                        }
-                        const wikiResult = await searchWikipedia(args);
-                        hideTyping();
-                        addMessage(wikiResult, 'bot', ['Tell me more', 'Thanks!']);
-                        break;
-                        
-                    case '/weather':
-                        if (!args) {
-                            hideTyping();
-                            addMessage('Usage: /weather city name', 'bot');
-                            return;
-                        }
-                        const weatherData = await getWeather(args);
-                        hideTyping();
-                        addMessage(weatherData, 'bot');
-                        break;
-                        
-                    case '/news':
-                        const topic = args || 'latest';
-                        const newsData = await getNews(topic);
-                        hideTyping();
-                        addMessage(newsData, 'bot');
-                        break;
-                        
-                    case '/currency':
-                        const currencyResult = await convertCurrency(args);
-                        hideTyping();
-                        addMessage(currencyResult, 'bot');
-                        break;
-                        
-                    case '/define':
-                        if (!args) {
-                            hideTyping();
-                            addMessage('Usage: /define word', 'bot');
-                            return;
-                        }
-                        const definition = await getDefinition(args);
-                        hideTyping();
-                        addMessage(definition, 'bot');
-                        break;
-                        
-                    case '/translate':
-                        const translation = await translateText(args);
-                        hideTyping();
-                        addMessage(translation, 'bot');
-                        break;
-                        
-                    case '/time':
-                        const timeInfo = await getTimeIn(args || 'UTC');
-                        hideTyping();
-                        addMessage(timeInfo, 'bot');
-                        break;
-                        
-                    case '/joke':
-                        hideTyping();
-                        const jokes = [
-                            "Why don't scientists trust atoms? Because they make up everything! 😄",
-                            "Why did the scarecrow win an award? Outstanding in his field! 🌾",
-                            "What do you call a bear with no teeth? A gummy bear! 🐻",
-                            "Parallel lines have so much in common. It's a shame they'll never meet! 📐",
-                            "I told my wife she was drawing her eyebrows too high. She looked surprised! 😮"
-                        ];
-                        addMessage(jokes[Math.floor(Math.random() * jokes.length)], 'bot', ['Another!', 'Haha!']);
-                        break;
-                        
-                    case '/fact':
-                        hideTyping();
-                        const facts = [
-                            "🌍 Honey never spoils! 3000-year-old honey is still edible.",
-                            "🐙 Octopuses have three hearts and blue blood!",
-                            "⚡ Lightning strikes Earth 100 times per second.",
-                            "🌙 All planets fit between Earth and Moon!",
-                            "🦈 Sharks are older than trees!"
-                        ];
-                        addMessage(facts[Math.floor(Math.random() * facts.length)], 'bot', ['Cool!', 'More facts']);
-                        break;
-                        
-                    case '/motivate':
-                        hideTyping();
-                        const quotes = [
-                            "💪 You're capable of amazing things!",
-                            "🌟 Believe in yourself!",
-                            "🚀 Every expert was once a beginner!",
-                            "✨ Your potential is endless!",
-                            "🎯 Success = small efforts repeated daily!"
-                        ];
-                        addMessage(quotes[Math.floor(Math.random() * quotes.length)], 'bot', ['Thanks!']);
-                        break;
-                        
-                    case '/calc':
-                        hideTyping();
-                        try {
-                            const result = eval(args);
-                            addMessage(`🔢 Result: **${result}**`, 'bot');
-                        } catch(e) {
-                            addMessage('❌ Invalid. Example: /calc 5+3*2', 'bot');
-                        }
-                        break;
-                        
-                    case '/note':
-                        hideTyping();
-                        if (args) {
-                            notes.push({text: args, time: new Date().toLocaleString()});
-                            localStorage.setItem('notes', JSON.stringify(notes));
-                            addMessage(`📝 Note saved! Total: ${notes.length}`, 'bot');
-                        } else {
-                            addMessage('Usage: /note your text', 'bot');
-                        }
-                        break;
-                        
-                    case '/notes':
-                        hideTyping();
-                        if (notes.length === 0) {
-                            addMessage('📝 No notes yet!', 'bot');
-                        } else {
-                            let list = '📝 **Your Notes:**\n\n';
-                            notes.forEach((n, i) => {
-                                list += `${i+1}. ${n.text}\n`;
-                            });
-                            addMessage(list, 'bot');
-                        }
-                        break;
-                        
-                    case '/todo':
-                        hideTyping();
-                        if (args) {
-                            todos.push({task: args, done: false});
-                            localStorage.setItem('todos', JSON.stringify(todos));
-                            addMessage(`✅ Added! Total: ${todos.length}`, 'bot');
-                        } else {
-                            addMessage('Usage: /todo your task', 'bot');
-                        }
-                        break;
-                        
-                    case '/todos':
-                        hideTyping();
-                        if (todos.length === 0) {
-                            addMessage('✅ No to-dos yet!', 'bot');
-                        } else {
-                            let list = '✅ **To-Dos:**\n\n';
-                            todos.forEach((t, i) => {
-                                list += `${i+1}. ${t.done ? '✓' : '○'} ${t.task}\n`;
-                            });
-                            addMessage(list, 'bot');
-                        }
-                        break;
-                        
-                    case '/clear':
-                        clearChat();
-                        break;
-                        
-                    default:
-                        hideTyping();
-                        addMessage(`❓ Unknown: ${command}\nType /help`, 'bot');
-                }
-            } catch (error) {
-                hideTyping();
-                addMessage(`Error: ${error.message}`, 'bot');
-            }
-        }
+    // -------------------- UI helpers --------------------
+    function addMessage(text, role='bot', quickReplies=[]){
+      messages.push({ role, text });
+      localStorage.setItem('messages', JSON.stringify(messages));
+      const wrap = document.createElement('div');
+      wrap.className = `max-w-3xl mx-auto ${role==='user'?'text-right':''}`;
+      wrap.innerHTML = role==='user' ?
+        `<div class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-2xl shadow">${escapeHTML(text)}</div>` :
+        `<div class="inline-block bg-white px-4 py-2 rounded-2xl shadow">${mdToHtml(text)}</div>`;
+      const container = document.getElementById('messages');
+      container.appendChild(wrap);
+      if(quickReplies?.length){
+        const row = document.createElement('div');
+        row.className = 'max-w-3xl mx-auto flex gap-2 mt-2';
+        quickReplies.forEach(q=>{
+          const b = document.createElement('button');
+          b.className = 'px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm';
+          b.textContent = q; b.onclick = ()=>{ document.getElementById('input').value = q; send(); };
+          row.appendChild(b);
+        });
+        container.appendChild(row);
+      }
+      container.scrollTop = container.scrollHeight;
+    }
 
-        // Internet Functions
-        async function webSearch(query) {
-            try {
-                // Using DuckDuckGo Instant Answer API (no key needed!)
-                const response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
-                const data = await response.json();
-                
-                if (data.AbstractText) {
-                    return `🔍 **Search Results:**\n\n**${data.Heading}**\n\n${data.AbstractText}\n\n📖 Source: ${data.AbstractURL || 'DuckDuckGo'}`;
-                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    let results = '🔍 **Search Results:**\n\n';
-                    data.RelatedTopics.slice(0, 3).forEach((topic, i) => {
-                        if (topic.Text) {
-                            results += `${i+1}. ${topic.Text.substring(0, 150)}...\n\n`;
-                        }
-                    });
-                    return results;
-                } else {
-                    return `🔍 Searched for: "${query}"\n\nNo detailed results found. Try being more specific or use /wiki for Wikipedia search.`;
-                }
-            } catch (error) {
-                return '❌ Search failed. Check your internet connection.';
-            }
-        }
+    function showTyping(){
+      const el = document.createElement('div');
+      el.id = 'typing';
+      el.className = 'max-w-3xl mx-auto';
+      el.innerHTML = `
+        <div class='inline-flex items-center gap-1 bg-white px-4 py-2 rounded-2xl shadow'>
+          <span class='typing-dot'>•</span><span class='typing-dot'>•</span><span class='typing-dot'>•</span>
+        </div>`;
+      document.getElementById('messages').appendChild(el);
+      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+    function hideTyping(){ const t = document.getElementById('typing'); if(t) t.remove(); }
+    function getQuickReplies(){ return []; }
 
-        async function searchWikipedia(topic) {
-            try {
-                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
-                const data = await response.json();
-                
-                if (data.extract) {
-                    return `📚 **Wikipedia: ${data.title}**\n\n${data.extract}\n\n🔗 Read more: ${data.content_urls?.desktop?.page || 'N/A'}`;
-                } else {
-                    return `📚 No Wikipedia article found for "${topic}". Try a different search term.`;
-                }
-            } catch (error) {
-                return '❌ Wikipedia lookup failed. Check spelling or try /search instead.';
-            }
-        }
+    function openSettings(){ document.getElementById('settingsModal').classList.remove('hidden'); }
+    function closeSettings(){ document.getElementById('settingsModal').classList.add('hidden'); }
+    function toggleAISettings(){
+      const m = document.getElementById('aiMode').value;
+      document.getElementById('geminiSettings').classList.toggle('hidden', m!=='gemini');
+      document.getElementById('openaiSettings').classList.toggle('hidden', m!=='openai');
+    }
 
-        async function getWeather(city) {
-            if (!config.weatherKey) {
-                return '🌤️ Weather API key not set.\n\nTo get weather:\n1. Get free key at openweathermap.org\n2. Add it in ⚙️ Settings\n3. Try again!\n\nFor now, search: /search weather in ' + city;
-            }
-            
-            try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${config.weatherKey}&units=imperial`);
-                const data = await response.json();
-                
-                if (data.main) {
-                    const temp = Math.round(data.main.temp);
-                    const feels = Math.round(data.main.feels_like);
-                    const desc = data.weather[0].description;
-                    const icon = data.weather[0].main;
-                    
-                    const icons = {
-                        'Clear': '☀️',
-                        'Clouds': '☁️',
-                        'Rain': '🌧️',
-                        'Snow': '❄️',
-                        'Thunderstorm': '⛈️'
-                    };
-                    
-                    return `${icons[icon] || '🌤️'} **Weather in ${data.name}:**\n\n🌡️ Temperature: ${temp}°F (feels like ${feels}°F)\n☁️ Conditions: ${desc}\n💨 Wind: ${data.wind.speed} mph\n💧 Humidity: ${data.main.humidity}%`;
-                } else {
-                    return `🌤️ City "${city}" not found. Try: /weather New York`;
-                }
-            } catch (error) {
-                return '❌ Weather service error. Check your API key in settings.';
-            }
-        }
+    function saveSettings(){
+      config.mode = document.getElementById('aiMode').value;
+      config.geminiKey = document.getElementById('geminiKey').value.trim();
+      config.openaiKey = document.getElementById('openaiKey').value.trim();
+      config.weatherKey = document.getElementById('weatherKey').value.trim();
+      config.newsKey = document.getElementById('newsKey').value.trim();
+      config.autoSpeak = document.getElementById('autoSpeak').checked;
+      config.continuousListen = document.getElementById('continuousListen').checked;
+      config.voiceNum = parseInt(document.getElementById('voiceNum').value)||5;
+      config.voiceSpeed = parseFloat(document.getElementById('voiceSpeed').value)||1.3;
+      config.userName = document.getElementById('userName').value.trim();
+      config.personality = document.getElementById('personality').value;
+      localStorage.setItem('config', JSON.stringify(config));
+      updateStatus();
+      closeSettings();
+      showToast('✅ Settings saved');
+    }
 
-        async function getNews(topic) {
-            if (!config.newsKey) {
-                return '📰 News API key not set.\n\nTo get news:\n1. Get free key at newsapi.org\n2. Add it in ⚙️ Settings\n3. Try again!\n\nFor now, try: /search latest ' + topic + ' news';
-            }
-            
-            try {
-                const query = topic === 'latest' ? 'technology' : topic;
-                const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&pageSize=5&apiKey=${config.newsKey}`);
-                const data = await response.json();
-                
-                if (data.articles && data.articles.length > 0) {
-                    let news = `📰 **Latest News: ${topic}**\n\n`;
-                    data.articles.slice(0, 5).forEach((article, i) => {
-                        news += `${i+1}. **${article.title}**\n   ${article.description?.substring(0, 100)}...\n   🔗 ${article.url}\n\n`;
-                    });
-                    return news;
-                } else {
-                    return `📰 No recent news found for "${topic}". Try a different topic.`;
-                }
-            } catch (error) {
-                return '❌ News service error. Check your API key in settings.';
-            }
-        }
+    function loadConfig(){
+      try{ const raw = localStorage.getItem('config'); if(raw){ config = { ...config, ...JSON.parse(raw) }; }
+      }catch(e){}
+      // reflect in UI
+      document.getElementById('aiMode').value = config.mode;
+      document.getElementById('geminiKey').value = config.geminiKey;
+      document.getElementById('openaiKey').value = config.openaiKey;
+      document.getElementById('weatherKey').value = config.weatherKey;
+      document.getElementById('newsKey').value = config.newsKey;
+      document.getElementById('autoSpeak').checked = config.autoSpeak;
+      document.getElementById('continuousListen').checked = config.continuousListen;
+      document.getElementById('voiceNum').value = config.voiceNum;
+      document.getElementById('voiceSpeed').value = config.voiceSpeed; document.getElementById('speedVal').textContent = config.voiceSpeed;
+      document.getElementById('userName').value = config.userName;
+      document.getElementById('personality').value = config.personality;
+      toggleAISettings();
+    }
 
-        async function convertCurrency(args) {
-            try {
-                // Parse: "100 USD to EUR"
-                const match = args.match(/(\d+\.?\d*)\s*(\w+)\s+to\s+(\w+)/i);
-                if (!match) {
-                    return '💱 Usage: /currency 100 USD to EUR';
-                }
-                
-                const [, amount, from, to] = match;
-                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${from.toUpperCase()}`);
-                const data = await response.json();
-                
-                if (data.rates && data.rates[to.toUpperCase()]) {
-                    const rate = data.rates[to.toUpperCase()];
-                    const result = (parseFloat(amount) * rate).toFixed(2);
-                    return `💱 **Currency Conversion:**\n\n${amount} ${from.toUpperCase()} = ${result} ${to.toUpperCase()}\n\n📊 Rate: 1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
-                } else {
-                    return `💱 Invalid currency code. Try: /currency 100 USD to EUR`;
-                }
-            } catch (error) {
-                return '❌ Currency conversion failed. Check currency codes (USD, EUR, GBP, etc.)';
-            }
-        }
+    function loadMessages(){
+      try{ const raw = localStorage.getItem('messages'); if(raw) messages = JSON.parse(raw) || []; }catch(e){}
+      const container = document.getElementById('messages');
+      container.innerHTML = '';
+      if(messages.length===0){ // leave the welcome block
+        container.innerHTML = container.innerHTML; return;
+      }
+      messages.forEach(m=> addMessage(m.text, m.role));
+    }
 
-        async function getDefinition(word) {
-            try {
-                const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
-                const data = await response.json();
-                
-                if (Array.isArray(data) && data[0]) {
-                    const entry = data[0];
-                    const meaning = entry.meanings[0];
-                    const definition = meaning.definitions[0];
-                    
-                    return `📖 **${entry.word}** (${meaning.partOfSpeech})\n\n**Definition:** ${definition.definition}\n\n${definition.example ? `**Example:** "${definition.example}"` : ''}`;
-                } else {
-                    return `📖 No definition found for "${word}". Check spelling.`;
-                }
-            } catch (error) {
-                return `📖 Dictionary lookup failed for "${word}".`;
-            }
-        }
+    function clearChat(){ messages = []; localStorage.removeItem('messages'); document.getElementById('messages').innerHTML=''; showToast('🧹 Cleared'); }
 
-        async function translateText(args) {
-            // Simple translation using MyMemory API (free, no key needed)
-            const match = args.match(/(.+?)\s+to\s+(\w+)/i);
-            if (!match) {
-                return '🌐 Usage: /translate hello to spanish\n\nSupported: spanish, french, german, italian, portuguese, japanese, chinese, etc.';
-            }
-            
-            const [, text, lang] = match;
-            const langCodes = {
-                'spanish': 'es', 'french': 'fr', 'german': 'de', 'italian': 'it',
-                'portuguese': 'pt', 'japanese': 'ja', 'chinese': 'zh', 'korean': 'ko',
-                'russian': 'ru', 'arabic': 'ar', 'hindi': 'hi'
-            };
-            
-            const targetLang = langCodes[lang.toLowerCase()] || lang.toLowerCase();
-            
-            try {
-                const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
-                const data = await response.json();
-                
-                if (data.responseData && data.responseData.translatedText) {
-                    return `🌐 **Translation:**\n\n**English:** ${text}\n**${lang}:** ${data.responseData.translatedText}`;
-                } else {
-                    return `🌐 Translation failed. Try: /translate hello to spanish`;
-                }
-            } catch (error) {
-                return '❌ Translation service error.';
-            }
-        }
+    function showCommands(){ addMessage('Type /help to see all commands.','bot'); }
 
-        async function getTimeIn(location) {
-            try {
-                const response = await fetch(`https://worldtimeapi.org/api/timezone`);
-                const timezones = await response.json();
-                
-                // Find matching timezone
-                const match = timezones.find(tz => tz.toLowerCase().includes(location.toLowerCase()));
-                
-                if (match) {
-                    const timeResponse = await fetch(`https://worldtimeapi.org/api/timezone/${match}`);
-                    const timeData = await timeResponse.json();
-                    const dateTime = new Date(timeData.datetime);
-                    
-                    return `🕐 **Time in ${match}:**\n\n${dateTime.toLocaleString()}\n\nTimezone: ${timeData.timezone}\nUTC Offset: ${timeData.utc_offset}`;
-                } else {
-                    return `🕐 Location not found. Try: /time London or /time America/New_York`;
-                }
-            } catch (error) {
-                const now = new Date();
-                return `🕐 Current time: ${now.toLocaleString()}`;
-            }
-        }
+    function showToast(msg){
+      const t = document.createElement('div');
+      t.className = 'fixed bottom-20 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg slide-in z-50';
+      t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 3000);
+    }
 
-        function getQuickReplies(response) {
-            const lower = response.toLowerCase();
-            if (lower.includes('search') || lower.includes('🔍')) return ['Search more', 'Thanks'];
-            if (lower.includes('weather') || lower.includes('🌤️')) return ['Another city', 'Thanks'];
-            if (lower.includes('?')) return ['Yes', 'No', 'Tell me more'];
-            return null;
-        }
+    function quickAction(text){ document.getElementById('input').value = text; send(); }
 
-        function showCommands() {
-            handleCommand('/help');
-        }
-
-        function addMessage(text, sender, quickReplies = null) {
-            messages.push({ text, sender, time: Date.now(), quickReplies });
-            render();
-            saveMessages();
-        }
-
-        function showTyping() {
-            const container = document.getElementById('messages');
-            const typing = document.createElement('div');
-            typing.id = 'typing';
-            typing.className = 'flex gap-2 slide-in';
-            typing.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-xl">🤖</div>
-                <div class="bg-white shadow rounded-2xl px-4 py-3 flex gap-1">
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot" style="animation-delay: 0.4s;"></div>
-                </div>
-            `;
-            container.appendChild(typing);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function hideTyping() {
-            const typing = document.getElementById('typing');
-            if (typing) typing.remove();
-        }
-
-        function render() {
-            const container = document.getElementById('messages');
-            if (messages.length === 0) return;
-            
-            let html = '';
-            messages.forEach((msg, idx) => {
-                const isUser = msg.sender === 'user';
-                const isLast = idx === messages.length - 1;
-                
-                html += `
-                    <div class="flex gap-2 ${isUser ? 'flex-row-reverse' : ''} slide-in">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xl ${isUser ? 'bg-indigo-600 text-white' : 'bg-gradient-to-r from-indigo-500 to-purple-500'}">
-                            ${isUser ? '👤' : '🤖'}
-                        </div>
-                        <div class="max-w-[70%]">
-                            <div class="rounded-2xl px-4 py-2 ${isUser ? 'bg-indigo-600 text-white' : 'bg-white shadow'} whitespace-pre-wrap">
-                                ${formatMessage(msg.text)}
-                            </div>
-                            ${msg.quickReplies && isLast ? `
-                                <div class="flex gap-2 mt-2 flex-wrap">
-                                    ${msg.quickReplies.map(reply => `
-                                        <button onclick="quickAction('${reply}')" class="px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 hover:from-indigo-200 hover:to-purple-200 rounded-full text-xs text-indigo-700">
-                                            ${reply}
-                                        </button>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function formatMessage(text) {
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-600 underline">$1</a>');
-            return text;
-        }
-
-        async function getAIResponse(text) {
-            const name = config.userName || 'friend';
-            
-            if (config.mode === 'rules') {
-                return getRuleResponse(text, name);
-            } else if (config.mode === 'gemini') {
-                if (!config.geminiKey) throw new Error('Gemini API key not set');
-                return await callGemini(text, name);
-            } else if (config.mode === 'openai') {
-                if (!config.openaiKey) throw new Error('OpenAI API key not set');
-                return await callOpenAI(text, name);
-            }
-        }
-
-        function getRuleResponse(msg, name) {
-            const m = msg.toLowerCase();
-            
-            if (m.match(/search|find|look up/)) {
-                return `I can search the internet! Try:\n• /search [query]\n• /wiki [topic]\n• /news [topic]`;
-            }
-            
-            if (m.match(/weather/)) {
-                return `Want weather? Try: /weather [city name]\nExample: /weather Tokyo`;
-            }
-            
-            if (m.match(/^(hi|hello|hey)/)) return `Hey ${name}! 👋 I'm super powered with internet access! Try /help`;
-            if (m.match(/how are you/)) return `Fantastic! 🚀 I can now search the web, check weather, translate, and more!`;
-            if (m.match(/what can you do/)) return `I'm super powered! 💪\n\n🔍 Search web\n🌤️ Weather\n📰 News\n💱 Currency\n📖 Dictionary\n🌐 Translate\n\nType /help for all commands!`;
-            
-            return `Try asking me to search something, or type /help to see all my powers! 🚀`;
-        }
-
-        async function callGemini(text, name) {
-            const personality = config.personality || 'friendly';
-            const prompt = `You are I-Stein Super Powered, a helpful AI with internet capabilities. ${name !== 'friend' ? `User's name: ${name}.` : ''} Be ${personality}. Brief (2-3 sentences). If they ask about your capabilities, mention you can search web, check weather, news, translate, and more via commands.\n\nUser: ${text}\n\nAssistant:`;
-            
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${config.geminiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
-            });
-            
-            if (!response.ok) {
-                const status = response.status;
-                if (status === 403) throw new Error('Invalid Gemini API key');
-                if (status === 429) throw new Error('Rate limit. Wait 1 minute');
-                throw new Error('Gemini error: ' + status);
-            }
-            
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
-        }
-
-        async function callOpenAI(text, name) {
-            const personality = config.personality || 'friendly';
-            const systemMsg = `You are I-Stein Super Powered, helpful AI with internet capabilities. ${name !== 'friend' ? `User: ${name}.` : ''} Be ${personality}. Brief (2-3 sentences).`;
-            
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${config.openaiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4o-mini',
-                    messages: [
-                        { role: 'system', content: systemMsg },
-                        { role: 'user', content: text }
-                    ]
-                })
-            });
-            
-            if (!response.ok) throw new Error('OpenAI error');
-            const data = await response.json();
-            return data.choices[0].message.content;
-        }
-
-        // Settings
-        function openSettings() {
-            document.getElementById('settingsModal').classList.remove('hidden');
-            document.getElementById('aiMode').value = config.mode;
-            document.getElementById('geminiKey').value = config.geminiKey;
-            document.getElementById('openaiKey').value = config.openaiKey;
-            document.getElementById('weatherKey').value = config.weatherKey;
-            document.getElementById('newsKey').value = config.newsKey;
-            document.getElementById('autoSpeak').checked = config.autoSpeak;
-            document.getElementById('continuousListen').checked = config.continuousListen;
-            document.getElementById('voiceSpeed').value = config.voiceSpeed;
-            document.getElementById('voiceNum').value = config.voiceNum;
-            document.getElementById('userName').value = config.userName;
-            document.getElementById('personality').value = config.personality;
-            document.getElementById('speedVal').textContent = config.voiceSpeed;
-            toggleAISettings();
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.add('hidden');
-        }
-
-        function toggleAISettings() {
-            const mode = document.getElementById('aiMode').value;
-            document.getElementById('geminiSettings').classList.toggle('hidden', mode !== 'gemini');
-            document.getElementById('openaiSettings').classList.toggle('hidden', mode !== 'openai');
-        }
-
-        function saveSettings() {
-            config.mode = document.getElementById('aiMode').value;
-            config.geminiKey = document.getElementById('geminiKey').value;
-            config.openaiKey = document.getElementById('openaiKey').value;
-            config.weatherKey = document.getElementById('weatherKey').value;
-            config.newsKey = document.getElementById('newsKey').value;
-            config.autoSpeak = document.getElementById('autoSpeak').checked;
-            config.continuousListen = document.getElementById('continuousListen').checked;
-            config.voiceSpeed = parseFloat(document.getElementById('voiceSpeed').value);
-            config.voiceNum = parseInt(document.getElementById('voiceNum').value);
-            config.userName = document.getElementById('userName').value;
-            config.personality = document.getElementById('personality').value;
-            
-            saveConfig();
-            closeSettings();
-            greetUser();
-            
-            if (config.continuousListen && !isListening) {
-                recognition.start();
-            } else if (!config.continuousListen && isListening) {
-                recognition.stop();
-            }
-            
-            showToast('✅ All settings saved!');
-        }
-
-        function saveConfig() {
-            localStorage.setItem('config', JSON.stringify(config));
-        }
-
-        function loadConfig() {
-            const saved = localStorage.getItem('config');
-            if (saved) config = {...config, ...JSON.parse(saved)};
-            
-            const savedNotes = localStorage.getItem('notes');
-            if (savedNotes) notes = JSON.parse(savedNotes);
-            
-            const savedTodos = localStorage.getItem('todos');
-            if (savedTodos) todos = JSON.parse(savedTodos);
-            
-            if (config.continuousListen) {
-                setTimeout(() => {
-                    if (recognition) recognition.start();
-                }, 1000);
-            }
-        }
-
-        function saveMessages() {
-            localStorage.setItem('messages', JSON.stringify(messages));
-        }
-
-        function loadMessages() {
-            const saved = localStorage.getItem('messages');
-            if (saved) {
-                messages = JSON.parse(saved);
-                render();
-            }
-        }
-
-        function clearChat() {
-            if (confirm('Clear chat?')) {
-                messages = [];
-                localStorage.removeItem('messages');
-                location.reload();
-            }
-        }
-    </script>
+    // -------------------- Utilities --------------------
+    function escapeHTML(s){ return s.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])); }
+    function mdToHtml(md){
+      // tiny markdown: **bold**, \n -> <br>
+      return escapeHTML(md).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    }
+  </script>
 </body>
 </html>
