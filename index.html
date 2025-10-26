@@ -3,40 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I-Stein Ultimate</title>
+    <title>I-Stein Super Powered</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes typing {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
         }
-        .typing-dot {
-            animation: typing 1.4s infinite;
-        }
-        .listening-pulse {
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
+        .typing-dot { animation: typing 1.4s infinite; }
+        .listening-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
+        .slide-in { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     
     <!-- Settings Modal -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 my-8 max-h-[90vh] overflow-y-auto">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">⚙️ Settings</h2>
+                    <h2 class="text-2xl font-bold">⚙️ Super Powered Settings</h2>
                     <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                 </div>
 
@@ -44,7 +42,7 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">AI Mode</label>
                     <select id="aiMode" onchange="toggleAISettings()" class="w-full px-4 py-2 border rounded-lg">
-                        <option value="rules">🔧 Rule-Based (Free)</option>
+                        <option value="rules">🔧 Rule-Based (Free, Offline)</option>
                         <option value="gemini">✨ Google Gemini (Free!)</option>
                         <option value="openai">🤖 OpenAI ChatGPT</option>
                     </select>
@@ -59,7 +57,25 @@
                 <div id="openaiSettings" class="hidden mb-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
                     <h3 class="font-semibold mb-2">🤖 OpenAI</h3>
                     <input type="password" id="openaiKey" placeholder="sk-proj-..." class="w-full px-4 py-2 border rounded-lg mb-2"/>
-                    <p class="text-xs text-gray-600">Get key: <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 underline">platform.openai.com</a></p>
+                </div>
+
+                <!-- API Keys for Internet Features -->
+                <div class="mb-4 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-200">
+                    <h3 class="font-semibold mb-3">🌐 Internet Features (Optional)</h3>
+                    
+                    <label class="block text-sm font-medium mb-1">Weather API Key (OpenWeather):</label>
+                    <input type="password" id="weatherKey" placeholder="Optional - Get free at openweathermap.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
+                    
+                    <label class="block text-sm font-medium mb-1">News API Key (NewsAPI):</label>
+                    <input type="password" id="newsKey" placeholder="Optional - Get free at newsapi.org" class="w-full px-4 py-2 border rounded-lg mb-3 text-sm"/>
+                    
+                    <div class="text-xs text-gray-600 bg-white p-3 rounded">
+                        <strong>📝 Note:</strong> Search & Wikipedia work without keys! Weather & News need free API keys (optional).
+                        <br><br>
+                        <strong>Get free keys:</strong><br>
+                        • Weather: <a href="https://openweathermap.org/api" target="_blank" class="text-blue-600 underline">openweathermap.org</a> (1000 calls/day free)<br>
+                        • News: <a href="https://newsapi.org" target="_blank" class="text-blue-600 underline">newsapi.org</a> (100 calls/day free)
+                    </div>
                 </div>
 
                 <!-- Voice Settings -->
@@ -67,34 +83,27 @@
                     <h3 class="font-semibold mb-3">🎤 Voice</h3>
                     <label class="flex items-center gap-2 mb-3">
                         <input type="checkbox" id="continuousListen" class="w-4 h-4"/>
-                        <span class="text-sm font-medium">🎙️ Always Listen (Auto Voice Detection)</span>
+                        <span class="text-sm font-medium">🎙️ Always Listen</span>
                     </label>
                     <label class="flex items-center gap-2 mb-3">
                         <input type="checkbox" id="autoSpeak" class="w-4 h-4"/>
                         <span class="text-sm font-medium">Auto-speak responses</span>
                     </label>
-                    <label class="block text-sm font-medium mb-2">Voice Number (0-21):</label>
-                    <input type="number" id="voiceNum" min="0" max="21" value="5" class="w-full px-4 py-2 border rounded-lg mb-2"/>
-                    <div class="text-xs text-gray-600 bg-white p-2 rounded mb-3">
-                        <strong>Best voices:</strong><br>
-                        • <strong>5</strong> = Google UK English Female 🇬🇧<br>
-                        • <strong>4</strong> = Google US English
-                    </div>
-                    <label class="block text-sm font-medium mb-1">Speed: <span id="speedVal">1.3</span>x</label>
-                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.3" class="w-full mb-3" oninput="document.getElementById('speedVal').textContent = this.value"/>
-                    <button onclick="testVoice()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">🔊 Test</button>
+                    <label class="block text-sm mb-1">Voice #: <input type="number" id="voiceNum" min="0" max="21" value="5" class="w-20 px-2 py-1 border rounded"/></label>
+                    <label class="block text-sm mb-1">Speed: <span id="speedVal">1.3</span>x</label>
+                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1.3" class="w-full mb-2" oninput="document.getElementById('speedVal').textContent = this.value"/>
                 </div>
 
                 <!-- Personality -->
                 <div class="mb-4 p-4 bg-pink-50 rounded-lg border-2 border-pink-200">
                     <h3 class="font-semibold mb-3">😊 Personality</h3>
-                    <label class="block text-sm font-medium mb-2">Your Name:</label>
-                    <input type="text" id="userName" placeholder="How should I call you?" class="w-full px-4 py-2 border rounded-lg mb-3"/>
-                    <label class="block text-sm font-medium mb-2">Assistant Style:</label>
+                    <label class="block text-sm mb-1">Your Name:</label>
+                    <input type="text" id="userName" placeholder="Optional" class="w-full px-4 py-2 border rounded-lg mb-3"/>
+                    <label class="block text-sm mb-1">Style:</label>
                     <select id="personality" class="w-full px-4 py-2 border rounded-lg">
-                        <option value="friendly">😊 Friendly & Casual</option>
+                        <option value="friendly">😊 Friendly</option>
                         <option value="professional">💼 Professional</option>
-                        <option value="funny">😂 Funny & Playful</option>
+                        <option value="funny">😂 Funny</option>
                         <option value="motivational">💪 Motivational</option>
                     </select>
                 </div>
@@ -109,22 +118,23 @@
         <!-- Header -->
         <div class="bg-white shadow-md px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 p-2 rounded-full relative">
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-2 rounded-full relative">
                     <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
                         <circle cx="12" cy="12" r="2" fill="white"/>
                         <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/>
+                        <path d="M12 2v4m0 12v4m10-10h-4m-12 0H2" stroke="white" stroke-width="2"/>
                     </svg>
                     <span id="listeningIndicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full listening-pulse"></span>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold">I-Stein Ultimate</h1>
-                    <p class="text-xs text-gray-500" id="statusText">Ready to help!</p>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">I-Stein ⚡ Super Powered</h1>
+                    <p class="text-xs text-gray-500" id="statusText">Ready with internet access!</p>
                 </div>
             </div>
             <div class="flex gap-2">
                 <button onclick="showCommands()" class="p-2 hover:bg-gray-100 rounded-full" title="Commands">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </button>
                 <button onclick="openSettings()" class="p-2 hover:bg-gray-100 rounded-full" title="Settings">
@@ -144,13 +154,13 @@
         <!-- Messages -->
         <div id="messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
             <div class="text-center text-gray-500 mt-20">
-                <div class="text-6xl mb-4">🤖✨</div>
-                <p class="text-lg font-medium" id="welcomeMsg">Hello! I'm I-Stein, your ultimate AI assistant!</p>
-                <p class="text-sm mt-2">Type, speak, or use commands like /help</p>
+                <div class="text-6xl mb-4">🚀⚡</div>
+                <p class="text-lg font-medium" id="welcomeMsg">I'm I-Stein Super Powered!</p>
+                <p class="text-sm mt-2">Now with internet search, weather, news & more!</p>
                 <div class="mt-4 flex gap-2 justify-center flex-wrap">
-                    <button onclick="quickAction('Tell me about yourself')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">About I-Stein</button>
-                    <button onclick="quickAction('/help')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">Show Commands</button>
-                    <button onclick="quickAction('/joke')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">Tell a Joke</button>
+                    <button onclick="quickAction('/search latest AI news')" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow rounded-full text-sm hover:shadow-lg">🔍 Search</button>
+                    <button onclick="quickAction('/weather New York')" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow rounded-full text-sm hover:shadow-lg">🌤️ Weather</button>
+                    <button onclick="quickAction('/help')" class="px-4 py-2 bg-white shadow rounded-full text-sm hover:bg-gray-50">📚 Commands</button>
                 </div>
             </div>
         </div>
@@ -163,8 +173,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
                     </svg>
                 </button>
-                <input type="text" id="input" placeholder="Type a message or /command..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeypress="if(event.key==='Enter')send()"/>
-                <button onclick="send()" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700">
+                <input type="text" id="input" placeholder="Ask anything or use /commands..." class="flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500" onkeypress="if(event.key==='Enter')send()"/>
+                <button onclick="send()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-full hover:shadow-lg">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
@@ -179,6 +189,8 @@
             mode: 'rules',
             geminiKey: '',
             openaiKey: '',
+            weatherKey: '',
+            newsKey: '',
             autoSpeak: false,
             continuousListen: false,
             voiceSpeed: 1.3,
@@ -201,15 +213,15 @@
 
         function greetUser() {
             if (config.userName) {
-                document.getElementById('welcomeMsg').textContent = `Hello ${config.userName}! I'm I-Stein, ready to help! 😊`;
-                document.getElementById('statusText').textContent = `Hey ${config.userName}!`;
+                document.getElementById('welcomeMsg').textContent = `Hello ${config.userName}! I'm Super Powered! 🚀`;
+                document.getElementById('statusText').textContent = `Hey ${config.userName}! Internet ready!`;
             }
         }
 
         function initVoice() {
             if ('webkitSpeechRecognition' in window) {
                 recognition = new webkitSpeechRecognition();
-                recognition.continuous = true; // Continuous listening
+                recognition.continuous = true;
                 recognition.interimResults = false;
                 
                 recognition.onstart = () => {
@@ -224,8 +236,6 @@
                     document.getElementById('listeningIndicator').classList.add('hidden');
                     document.getElementById('voiceBtn').classList.remove('bg-green-500');
                     document.getElementById('voiceBtn').classList.add('bg-red-500');
-                    
-                    // Restart if continuous mode enabled
                     if (config.continuousListen) {
                         setTimeout(() => recognition.start(), 500);
                     }
@@ -238,7 +248,6 @@
                 };
                 
                 recognition.onerror = (error) => {
-                    console.log('Voice error:', error);
                     if (error.error !== 'no-speech') {
                         isListening = false;
                         document.getElementById('listeningIndicator').classList.add('hidden');
@@ -252,19 +261,18 @@
         function toggleContinuousListen() {
             config.continuousListen = !config.continuousListen;
             saveConfig();
-            
             if (config.continuousListen) {
                 recognition.start();
-                showToast('🎙️ Always listening mode ON! Just start talking.');
+                showToast('🎙️ Always listening ON!');
             } else {
                 recognition.stop();
-                showToast('🎙️ Manual mode. Click mic to speak.');
+                showToast('🎙️ Manual mode.');
             }
         }
 
         function showToast(msg) {
             const toast = document.createElement('div');
-            toast.className = 'fixed bottom-20 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg slide-in';
+            toast.className = 'fixed bottom-20 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg slide-in z-50';
             toast.textContent = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
@@ -280,18 +288,11 @@
             synthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = config.voiceSpeed;
-            utterance.pitch = 1.0;
-            
             const voices = synthesis.getVoices();
             if (voices[config.voiceNum]) {
                 utterance.voice = voices[config.voiceNum];
             }
-            
             synthesis.speak(utterance);
-        }
-
-        function testVoice() {
-            speak("Hello! This is I-Stein. How do you like my voice?");
         }
 
         function send() {
@@ -299,7 +300,6 @@
             const text = input.value.trim();
             if (!text) return;
             
-            // Check for commands
             if (text.startsWith('/')) {
                 handleCommand(text);
                 input.value = '';
@@ -317,138 +317,422 @@
                     addMessage(response, 'bot', getQuickReplies(response));
                     speak(response);
                 } catch (error) {
-                    addMessage('Oops! ' + error.message, 'bot');
+                    addMessage('Error: ' + error.message, 'bot');
                 }
             }, 800);
         }
 
-        function handleCommand(cmd) {
-            const command = cmd.toLowerCase().split(' ')[0];
+        async function handleCommand(cmd) {
+            const parts = cmd.split(' ');
+            const command = parts[0].toLowerCase();
+            const args = parts.slice(1).join(' ');
             
-            switch(command) {
-                case '/help':
-                    addMessage(`📚 **Available Commands:**
-                    
-• /help - Show this help
-• /joke - Tell a random joke
-• /fact - Share an interesting fact
-• /motivate - Get motivated!
-• /calc [expression] - Calculator (e.g., /calc 5+3)
-• /note [text] - Save a note
-• /notes - View all notes
+            showTyping();
+            
+            try {
+                switch(command) {
+                    case '/help':
+                        hideTyping();
+                        addMessage(`🚀 **I-Stein Super Powered Commands:**
+
+**🔍 Internet & Search:**
+• /search [query] - Web search
+• /wiki [topic] - Wikipedia lookup
+• /news [topic] - Latest news
+• /weather [city] - Weather forecast
+• /currency [amt] [from] to [to] - Convert (e.g., /currency 100 USD to EUR)
+• /define [word] - Dictionary
+• /translate [text] to [lang] - Translate
+
+**🛠️ Tools:**
+• /calc [expression] - Calculator
+• /time [city] - Time in city
+• /note [text] - Save note
+• /notes - View notes
 • /todo [task] - Add to-do
 • /todos - View to-dos
-• /clear - Clear chat
-• /time - Current time`, 'bot');
-                    break;
+
+**🎉 Fun:**
+• /joke - Random joke
+• /fact - Interesting fact
+• /motivate - Motivation
+• /clear - Clear chat`, 'bot');
+                        break;
+                        
+                    case '/search':
+                        if (!args) {
+                            hideTyping();
+                            addMessage('Usage: /search your query here', 'bot');
+                            return;
+                        }
+                        const searchResults = await webSearch(args);
+                        hideTyping();
+                        addMessage(searchResults, 'bot', ['Search more', 'Thanks!']);
+                        break;
+                        
+                    case '/wiki':
+                        if (!args) {
+                            hideTyping();
+                            addMessage('Usage: /wiki topic', 'bot');
+                            return;
+                        }
+                        const wikiResult = await searchWikipedia(args);
+                        hideTyping();
+                        addMessage(wikiResult, 'bot', ['Tell me more', 'Thanks!']);
+                        break;
+                        
+                    case '/weather':
+                        if (!args) {
+                            hideTyping();
+                            addMessage('Usage: /weather city name', 'bot');
+                            return;
+                        }
+                        const weatherData = await getWeather(args);
+                        hideTyping();
+                        addMessage(weatherData, 'bot');
+                        break;
+                        
+                    case '/news':
+                        const topic = args || 'latest';
+                        const newsData = await getNews(topic);
+                        hideTyping();
+                        addMessage(newsData, 'bot');
+                        break;
+                        
+                    case '/currency':
+                        const currencyResult = await convertCurrency(args);
+                        hideTyping();
+                        addMessage(currencyResult, 'bot');
+                        break;
+                        
+                    case '/define':
+                        if (!args) {
+                            hideTyping();
+                            addMessage('Usage: /define word', 'bot');
+                            return;
+                        }
+                        const definition = await getDefinition(args);
+                        hideTyping();
+                        addMessage(definition, 'bot');
+                        break;
+                        
+                    case '/translate':
+                        const translation = await translateText(args);
+                        hideTyping();
+                        addMessage(translation, 'bot');
+                        break;
+                        
+                    case '/time':
+                        const timeInfo = await getTimeIn(args || 'UTC');
+                        hideTyping();
+                        addMessage(timeInfo, 'bot');
+                        break;
+                        
+                    case '/joke':
+                        hideTyping();
+                        const jokes = [
+                            "Why don't scientists trust atoms? Because they make up everything! 😄",
+                            "Why did the scarecrow win an award? Outstanding in his field! 🌾",
+                            "What do you call a bear with no teeth? A gummy bear! 🐻",
+                            "Parallel lines have so much in common. It's a shame they'll never meet! 📐",
+                            "I told my wife she was drawing her eyebrows too high. She looked surprised! 😮"
+                        ];
+                        addMessage(jokes[Math.floor(Math.random() * jokes.length)], 'bot', ['Another!', 'Haha!']);
+                        break;
+                        
+                    case '/fact':
+                        hideTyping();
+                        const facts = [
+                            "🌍 Honey never spoils! 3000-year-old honey is still edible.",
+                            "🐙 Octopuses have three hearts and blue blood!",
+                            "⚡ Lightning strikes Earth 100 times per second.",
+                            "🌙 All planets fit between Earth and Moon!",
+                            "🦈 Sharks are older than trees!"
+                        ];
+                        addMessage(facts[Math.floor(Math.random() * facts.length)], 'bot', ['Cool!', 'More facts']);
+                        break;
+                        
+                    case '/motivate':
+                        hideTyping();
+                        const quotes = [
+                            "💪 You're capable of amazing things!",
+                            "🌟 Believe in yourself!",
+                            "🚀 Every expert was once a beginner!",
+                            "✨ Your potential is endless!",
+                            "🎯 Success = small efforts repeated daily!"
+                        ];
+                        addMessage(quotes[Math.floor(Math.random() * quotes.length)], 'bot', ['Thanks!']);
+                        break;
+                        
+                    case '/calc':
+                        hideTyping();
+                        try {
+                            const result = eval(args);
+                            addMessage(`🔢 Result: **${result}**`, 'bot');
+                        } catch(e) {
+                            addMessage('❌ Invalid. Example: /calc 5+3*2', 'bot');
+                        }
+                        break;
+                        
+                    case '/note':
+                        hideTyping();
+                        if (args) {
+                            notes.push({text: args, time: new Date().toLocaleString()});
+                            localStorage.setItem('notes', JSON.stringify(notes));
+                            addMessage(`📝 Note saved! Total: ${notes.length}`, 'bot');
+                        } else {
+                            addMessage('Usage: /note your text', 'bot');
+                        }
+                        break;
+                        
+                    case '/notes':
+                        hideTyping();
+                        if (notes.length === 0) {
+                            addMessage('📝 No notes yet!', 'bot');
+                        } else {
+                            let list = '📝 **Your Notes:**\n\n';
+                            notes.forEach((n, i) => {
+                                list += `${i+1}. ${n.text}\n`;
+                            });
+                            addMessage(list, 'bot');
+                        }
+                        break;
+                        
+                    case '/todo':
+                        hideTyping();
+                        if (args) {
+                            todos.push({task: args, done: false});
+                            localStorage.setItem('todos', JSON.stringify(todos));
+                            addMessage(`✅ Added! Total: ${todos.length}`, 'bot');
+                        } else {
+                            addMessage('Usage: /todo your task', 'bot');
+                        }
+                        break;
+                        
+                    case '/todos':
+                        hideTyping();
+                        if (todos.length === 0) {
+                            addMessage('✅ No to-dos yet!', 'bot');
+                        } else {
+                            let list = '✅ **To-Dos:**\n\n';
+                            todos.forEach((t, i) => {
+                                list += `${i+1}. ${t.done ? '✓' : '○'} ${t.task}\n`;
+                            });
+                            addMessage(list, 'bot');
+                        }
+                        break;
+                        
+                    case '/clear':
+                        clearChat();
+                        break;
+                        
+                    default:
+                        hideTyping();
+                        addMessage(`❓ Unknown: ${command}\nType /help`, 'bot');
+                }
+            } catch (error) {
+                hideTyping();
+                addMessage(`Error: ${error.message}`, 'bot');
+            }
+        }
+
+        // Internet Functions
+        async function webSearch(query) {
+            try {
+                // Using DuckDuckGo Instant Answer API (no key needed!)
+                const response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
+                const data = await response.json();
+                
+                if (data.AbstractText) {
+                    return `🔍 **Search Results:**\n\n**${data.Heading}**\n\n${data.AbstractText}\n\n📖 Source: ${data.AbstractURL || 'DuckDuckGo'}`;
+                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                    let results = '🔍 **Search Results:**\n\n';
+                    data.RelatedTopics.slice(0, 3).forEach((topic, i) => {
+                        if (topic.Text) {
+                            results += `${i+1}. ${topic.Text.substring(0, 150)}...\n\n`;
+                        }
+                    });
+                    return results;
+                } else {
+                    return `🔍 Searched for: "${query}"\n\nNo detailed results found. Try being more specific or use /wiki for Wikipedia search.`;
+                }
+            } catch (error) {
+                return '❌ Search failed. Check your internet connection.';
+            }
+        }
+
+        async function searchWikipedia(topic) {
+            try {
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
+                const data = await response.json();
+                
+                if (data.extract) {
+                    return `📚 **Wikipedia: ${data.title}**\n\n${data.extract}\n\n🔗 Read more: ${data.content_urls?.desktop?.page || 'N/A'}`;
+                } else {
+                    return `📚 No Wikipedia article found for "${topic}". Try a different search term.`;
+                }
+            } catch (error) {
+                return '❌ Wikipedia lookup failed. Check spelling or try /search instead.';
+            }
+        }
+
+        async function getWeather(city) {
+            if (!config.weatherKey) {
+                return '🌤️ Weather API key not set.\n\nTo get weather:\n1. Get free key at openweathermap.org\n2. Add it in ⚙️ Settings\n3. Try again!\n\nFor now, search: /search weather in ' + city;
+            }
+            
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${config.weatherKey}&units=imperial`);
+                const data = await response.json();
+                
+                if (data.main) {
+                    const temp = Math.round(data.main.temp);
+                    const feels = Math.round(data.main.feels_like);
+                    const desc = data.weather[0].description;
+                    const icon = data.weather[0].main;
                     
-                case '/joke':
-                    const jokes = [
-                        "Why don't scientists trust atoms? Because they make up everything! 😄",
-                        "Why did the scarecrow win an award? He was outstanding in his field! 🌾",
-                        "What do you call a bear with no teeth? A gummy bear! 🐻",
-                        "Why don't eggs tell jokes? They'd crack each other up! 🥚",
-                        "What did the ocean say to the beach? Nothing, it just waved! 🌊"
-                    ];
-                    addMessage(jokes[Math.floor(Math.random() * jokes.length)], 'bot', ['Tell another', 'That was funny!']);
-                    break;
+                    const icons = {
+                        'Clear': '☀️',
+                        'Clouds': '☁️',
+                        'Rain': '🌧️',
+                        'Snow': '❄️',
+                        'Thunderstorm': '⛈️'
+                    };
                     
-                case '/fact':
-                    const facts = [
-                        "🌍 Honey never spoils! Archaeologists have found 3000-year-old honey that's still edible.",
-                        "🐙 Octopuses have three hearts and blue blood!",
-                        "⚡ Lightning strikes the Earth about 100 times per second.",
-                        "🌙 You can fit all the planets in our solar system between Earth and the Moon.",
-                        "🦈 Sharks have been around longer than trees!"
-                    ];
-                    addMessage(facts[Math.floor(Math.random() * facts.length)], 'bot', ['Tell me more', 'Cool!']);
-                    break;
+                    return `${icons[icon] || '🌤️'} **Weather in ${data.name}:**\n\n🌡️ Temperature: ${temp}°F (feels like ${feels}°F)\n☁️ Conditions: ${desc}\n💨 Wind: ${data.wind.speed} mph\n💧 Humidity: ${data.main.humidity}%`;
+                } else {
+                    return `🌤️ City "${city}" not found. Try: /weather New York`;
+                }
+            } catch (error) {
+                return '❌ Weather service error. Check your API key in settings.';
+            }
+        }
+
+        async function getNews(topic) {
+            if (!config.newsKey) {
+                return '📰 News API key not set.\n\nTo get news:\n1. Get free key at newsapi.org\n2. Add it in ⚙️ Settings\n3. Try again!\n\nFor now, try: /search latest ' + topic + ' news';
+            }
+            
+            try {
+                const query = topic === 'latest' ? 'technology' : topic;
+                const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&pageSize=5&apiKey=${config.newsKey}`);
+                const data = await response.json();
+                
+                if (data.articles && data.articles.length > 0) {
+                    let news = `📰 **Latest News: ${topic}**\n\n`;
+                    data.articles.slice(0, 5).forEach((article, i) => {
+                        news += `${i+1}. **${article.title}**\n   ${article.description?.substring(0, 100)}...\n   🔗 ${article.url}\n\n`;
+                    });
+                    return news;
+                } else {
+                    return `📰 No recent news found for "${topic}". Try a different topic.`;
+                }
+            } catch (error) {
+                return '❌ News service error. Check your API key in settings.';
+            }
+        }
+
+        async function convertCurrency(args) {
+            try {
+                // Parse: "100 USD to EUR"
+                const match = args.match(/(\d+\.?\d*)\s*(\w+)\s+to\s+(\w+)/i);
+                if (!match) {
+                    return '💱 Usage: /currency 100 USD to EUR';
+                }
+                
+                const [, amount, from, to] = match;
+                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${from.toUpperCase()}`);
+                const data = await response.json();
+                
+                if (data.rates && data.rates[to.toUpperCase()]) {
+                    const rate = data.rates[to.toUpperCase()];
+                    const result = (parseFloat(amount) * rate).toFixed(2);
+                    return `💱 **Currency Conversion:**\n\n${amount} ${from.toUpperCase()} = ${result} ${to.toUpperCase()}\n\n📊 Rate: 1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
+                } else {
+                    return `💱 Invalid currency code. Try: /currency 100 USD to EUR`;
+                }
+            } catch (error) {
+                return '❌ Currency conversion failed. Check currency codes (USD, EUR, GBP, etc.)';
+            }
+        }
+
+        async function getDefinition(word) {
+            try {
+                const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                const data = await response.json();
+                
+                if (Array.isArray(data) && data[0]) {
+                    const entry = data[0];
+                    const meaning = entry.meanings[0];
+                    const definition = meaning.definitions[0];
                     
-                case '/motivate':
-                    const quotes = [
-                        "💪 You're capable of amazing things! Keep going!",
-                        "🌟 Believe in yourself. You've got this!",
-                        "🚀 Every expert was once a beginner. Keep learning!",
-                        "✨ Your potential is endless. Don't limit yourself!",
-                        "🎯 Success is the sum of small efforts repeated daily."
-                    ];
-                    addMessage(quotes[Math.floor(Math.random() * quotes.length)], 'bot', ['Thanks!', 'I needed that']);
-                    break;
+                    return `📖 **${entry.word}** (${meaning.partOfSpeech})\n\n**Definition:** ${definition.definition}\n\n${definition.example ? `**Example:** "${definition.example}"` : ''}`;
+                } else {
+                    return `📖 No definition found for "${word}". Check spelling.`;
+                }
+            } catch (error) {
+                return `📖 Dictionary lookup failed for "${word}".`;
+            }
+        }
+
+        async function translateText(args) {
+            // Simple translation using MyMemory API (free, no key needed)
+            const match = args.match(/(.+?)\s+to\s+(\w+)/i);
+            if (!match) {
+                return '🌐 Usage: /translate hello to spanish\n\nSupported: spanish, french, german, italian, portuguese, japanese, chinese, etc.';
+            }
+            
+            const [, text, lang] = match;
+            const langCodes = {
+                'spanish': 'es', 'french': 'fr', 'german': 'de', 'italian': 'it',
+                'portuguese': 'pt', 'japanese': 'ja', 'chinese': 'zh', 'korean': 'ko',
+                'russian': 'ru', 'arabic': 'ar', 'hindi': 'hi'
+            };
+            
+            const targetLang = langCodes[lang.toLowerCase()] || lang.toLowerCase();
+            
+            try {
+                const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
+                const data = await response.json();
+                
+                if (data.responseData && data.responseData.translatedText) {
+                    return `🌐 **Translation:**\n\n**English:** ${text}\n**${lang}:** ${data.responseData.translatedText}`;
+                } else {
+                    return `🌐 Translation failed. Try: /translate hello to spanish`;
+                }
+            } catch (error) {
+                return '❌ Translation service error.';
+            }
+        }
+
+        async function getTimeIn(location) {
+            try {
+                const response = await fetch(`https://worldtimeapi.org/api/timezone`);
+                const timezones = await response.json();
+                
+                // Find matching timezone
+                const match = timezones.find(tz => tz.toLowerCase().includes(location.toLowerCase()));
+                
+                if (match) {
+                    const timeResponse = await fetch(`https://worldtimeapi.org/api/timezone/${match}`);
+                    const timeData = await timeResponse.json();
+                    const dateTime = new Date(timeData.datetime);
                     
-                case '/calc':
-                    try {
-                        const expr = cmd.substring(6);
-                        const result = eval(expr);
-                        addMessage(`🔢 Result: **${result}**`, 'bot');
-                    } catch(e) {
-                        addMessage('❌ Invalid calculation. Example: /calc 5+3*2', 'bot');
-                    }
-                    break;
-                    
-                case '/note':
-                    const note = cmd.substring(6);
-                    if (note) {
-                        notes.push({text: note, time: new Date().toLocaleString()});
-                        localStorage.setItem('notes', JSON.stringify(notes));
-                        addMessage(`📝 Note saved! You have ${notes.length} notes.`, 'bot', ['View notes']);
-                    } else {
-                        addMessage('Usage: /note Your note text here', 'bot');
-                    }
-                    break;
-                    
-                case '/notes':
-                    if (notes.length === 0) {
-                        addMessage('📝 No notes yet. Use /note [text] to save one!', 'bot');
-                    } else {
-                        let notesList = '📝 **Your Notes:**\n\n';
-                        notes.forEach((n, i) => {
-                            notesList += `${i+1}. ${n.text}\n   (${n.time})\n\n`;
-                        });
-                        addMessage(notesList, 'bot', ['Clear notes']);
-                    }
-                    break;
-                    
-                case '/todo':
-                    const task = cmd.substring(6);
-                    if (task) {
-                        todos.push({task: task, done: false, time: new Date().toLocaleString()});
-                        localStorage.setItem('todos', JSON.stringify(todos));
-                        addMessage(`✅ To-do added! You have ${todos.length} tasks.`, 'bot', ['View to-dos']);
-                    } else {
-                        addMessage('Usage: /todo Your task here', 'bot');
-                    }
-                    break;
-                    
-                case '/todos':
-                    if (todos.length === 0) {
-                        addMessage('✅ No to-dos yet. Use /todo [task] to add one!', 'bot');
-                    } else {
-                        let todoList = '✅ **Your To-Dos:**\n\n';
-                        todos.forEach((t, i) => {
-                            todoList += `${i+1}. ${t.done ? '✓' : '○'} ${t.task}\n`;
-                        });
-                        addMessage(todoList, 'bot', ['Clear to-dos']);
-                    }
-                    break;
-                    
-                case '/time':
-                    addMessage(`🕐 Current time: **${new Date().toLocaleString()}**`, 'bot');
-                    break;
-                    
-                case '/clear':
-                    clearChat();
-                    break;
-                    
-                default:
-                    addMessage(`❓ Unknown command: ${command}\nType /help for available commands.`, 'bot');
+                    return `🕐 **Time in ${match}:**\n\n${dateTime.toLocaleString()}\n\nTimezone: ${timeData.timezone}\nUTC Offset: ${timeData.utc_offset}`;
+                } else {
+                    return `🕐 Location not found. Try: /time London or /time America/New_York`;
+                }
+            } catch (error) {
+                const now = new Date();
+                return `🕐 Current time: ${now.toLocaleString()}`;
             }
         }
 
         function getQuickReplies(response) {
             const lower = response.toLowerCase();
+            if (lower.includes('search') || lower.includes('🔍')) return ['Search more', 'Thanks'];
+            if (lower.includes('weather') || lower.includes('🌤️')) return ['Another city', 'Thanks'];
             if (lower.includes('?')) return ['Yes', 'No', 'Tell me more'];
-            if (lower.includes('joke')) return ['Tell another', 'That was funny!'];
-            if (lower.includes('help')) return ['Thanks!', 'Show more'];
             return null;
         }
 
@@ -468,7 +752,7 @@
             typing.id = 'typing';
             typing.className = 'flex gap-2 slide-in';
             typing.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xl">🤖</div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-xl">🤖</div>
                 <div class="bg-white shadow rounded-2xl px-4 py-3 flex gap-1">
                     <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
                     <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
@@ -495,7 +779,7 @@
                 
                 html += `
                     <div class="flex gap-2 ${isUser ? 'flex-row-reverse' : ''} slide-in">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xl ${isUser ? 'bg-indigo-600 text-white' : 'bg-gray-300'}">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xl ${isUser ? 'bg-indigo-600 text-white' : 'bg-gradient-to-r from-indigo-500 to-purple-500'}">
                             ${isUser ? '👤' : '🤖'}
                         </div>
                         <div class="max-w-[70%]">
@@ -505,7 +789,7 @@
                             ${msg.quickReplies && isLast ? `
                                 <div class="flex gap-2 mt-2 flex-wrap">
                                     ${msg.quickReplies.map(reply => `
-                                        <button onclick="quickAction('${reply}')" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 rounded-full text-xs text-indigo-700">
+                                        <button onclick="quickAction('${reply}')" class="px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 hover:from-indigo-200 hover:to-purple-200 rounded-full text-xs text-indigo-700">
                                             ${reply}
                                         </button>
                                     `).join('')}
@@ -520,83 +804,47 @@
         }
 
         function formatMessage(text) {
-            // Bold **text**
             text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            // Italic *text*
             text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-600 underline">$1</a>');
             return text;
         }
 
         async function getAIResponse(text) {
-            const greeting = config.userName ? `${config.userName}` : 'friend';
+            const name = config.userName || 'friend';
             
             if (config.mode === 'rules') {
-                return getRuleResponse(text, greeting);
+                return getRuleResponse(text, name);
             } else if (config.mode === 'gemini') {
                 if (!config.geminiKey) throw new Error('Gemini API key not set');
-                return await callGemini(text, greeting);
+                return await callGemini(text, name);
             } else if (config.mode === 'openai') {
                 if (!config.openaiKey) throw new Error('OpenAI API key not set');
-                return await callOpenAI(text, greeting);
+                return await callOpenAI(text, name);
             }
         }
 
         function getRuleResponse(msg, name) {
             const m = msg.toLowerCase();
-            const styles = {
-                friendly: {
-                    hi: `Hey ${name}! 👋 Great to see you! How can I help?`,
-                    how: `I'm doing awesome, thanks for asking! 😊 How about you?`,
-                    thanks: `You're so welcome ${name}! Happy to help anytime! 😊`,
-                    bye: `See you later ${name}! Come back soon! 👋`,
-                    default: `That's interesting! Tell me more about that. 🤔`
-                },
-                professional: {
-                    hi: `Good day${name ? ' ' + name : ''}. How may I assist you today?`,
-                    how: `I'm functioning optimally. How may I help you?`,
-                    thanks: `You're welcome. Please let me know if you need anything else.`,
-                    bye: `Goodbye. Feel free to return if you need assistance.`,
-                    default: `I understand. Could you provide more details?`
-                },
-                funny: {
-                    hi: `Heyyy ${name}! 🎉 Ready to have some fun? What's up?`,
-                    how: `I'm fantabulous! Living my best digital life! 😎 You?`,
-                    thanks: `No problemo ${name}! I'm here all week! (Actually, I'm here forever 😅)`,
-                    bye: `Later gator! 🐊 Don't be a stranger!`,
-                    default: `Ooh, spicy topic! Tell me everything! 🌶️`
-                },
-                motivational: {
-                    hi: `Hello ${name}! 💪 Ready to conquer today? Let's do this!`,
-                    how: `I'm energized and ready to help you achieve greatness! 🌟`,
-                    thanks: `You're amazing ${name}! Keep up that positive attitude! ✨`,
-                    bye: `Go out there and be awesome ${name}! You've got this! 🚀`,
-                    default: `That's a powerful thought! Let's explore it together! 💡`
-                }
-            };
             
-            const style = styles[config.personality] || styles.friendly;
-            
-            if (m.match(/^(hi|hello|hey|greetings)/)) return style.hi;
-            if (m.match(/how are you|how's it going|what's up/)) return style.how;
-            if (m.match(/thank|thanks|thx/)) return style.thanks;
-            if (m.match(/bye|goodbye|see you|later/)) return style.bye;
-            if (m.match(/time|date/)) return `🕐 It's ${new Date().toLocaleString()}. What can I help you with?`;
-            if (m.match(/who are you|what are you|tell me about yourself/)) {
-                return `I'm I-Stein Ultimate! 🤖✨\n\nI can:\n• Chat with you\n• Use voice (say anything!)\n• Do calculations\n• Save notes & to-dos\n• Tell jokes & facts\n• And much more!\n\nTry typing /help to see all my commands!`;
+            if (m.match(/search|find|look up/)) {
+                return `I can search the internet! Try:\n• /search [query]\n• /wiki [topic]\n• /news [topic]`;
             }
             
-            return style.default;
+            if (m.match(/weather/)) {
+                return `Want weather? Try: /weather [city name]\nExample: /weather Tokyo`;
+            }
+            
+            if (m.match(/^(hi|hello|hey)/)) return `Hey ${name}! 👋 I'm super powered with internet access! Try /help`;
+            if (m.match(/how are you/)) return `Fantastic! 🚀 I can now search the web, check weather, translate, and more!`;
+            if (m.match(/what can you do/)) return `I'm super powered! 💪\n\n🔍 Search web\n🌤️ Weather\n📰 News\n💱 Currency\n📖 Dictionary\n🌐 Translate\n\nType /help for all commands!`;
+            
+            return `Try asking me to search something, or type /help to see all my powers! 🚀`;
         }
 
         async function callGemini(text, name) {
-            const personality = {
-                friendly: 'friendly and casual',
-                professional: 'professional and formal',
-                funny: 'funny and playful',
-                motivational: 'motivational and encouraging'
-            }[config.personality] || 'friendly';
-            
-            const prompt = `You are I-Stein, a helpful AI assistant with a ${personality} personality. ${name !== 'friend' ? `The user's name is ${name}.` : ''} Be conversational and helpful. Keep responses brief (2-3 sentences max).\n\nUser: ${text}\n\nAssistant:`;
+            const personality = config.personality || 'friendly';
+            const prompt = `You are I-Stein Super Powered, a helpful AI with internet capabilities. ${name !== 'friend' ? `User's name: ${name}.` : ''} Be ${personality}. Brief (2-3 sentences). If they ask about your capabilities, mention you can search web, check weather, news, translate, and more via commands.\n\nUser: ${text}\n\nAssistant:`;
             
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${config.geminiKey}`, {
                 method: 'POST',
@@ -606,20 +854,20 @@
                 })
             });
             
-            if (!response.ok) throw new Error('Gemini API error');
+            if (!response.ok) {
+                const status = response.status;
+                if (status === 403) throw new Error('Invalid Gemini API key');
+                if (status === 429) throw new Error('Rate limit. Wait 1 minute');
+                throw new Error('Gemini error: ' + status);
+            }
+            
             const data = await response.json();
             return data.candidates[0].content.parts[0].text;
         }
 
         async function callOpenAI(text, name) {
-            const personality = {
-                friendly: 'friendly and casual',
-                professional: 'professional and formal',
-                funny: 'funny and playful',
-                motivational: 'motivational and encouraging'
-            }[config.personality] || 'friendly';
-            
-            const systemMsg = `You are I-Stein, a helpful AI assistant with a ${personality} personality. ${name !== 'friend' ? `The user's name is ${name}.` : ''} Be conversational and helpful. Keep responses brief (2-3 sentences max).`;
+            const personality = config.personality || 'friendly';
+            const systemMsg = `You are I-Stein Super Powered, helpful AI with internet capabilities. ${name !== 'friend' ? `User: ${name}.` : ''} Be ${personality}. Brief (2-3 sentences).`;
             
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -636,17 +884,19 @@
                 })
             });
             
-            if (!response.ok) throw new Error('OpenAI API error');
+            if (!response.ok) throw new Error('OpenAI error');
             const data = await response.json();
             return data.choices[0].message.content;
         }
 
-        // Settings Functions
+        // Settings
         function openSettings() {
             document.getElementById('settingsModal').classList.remove('hidden');
             document.getElementById('aiMode').value = config.mode;
             document.getElementById('geminiKey').value = config.geminiKey;
             document.getElementById('openaiKey').value = config.openaiKey;
+            document.getElementById('weatherKey').value = config.weatherKey;
+            document.getElementById('newsKey').value = config.newsKey;
             document.getElementById('autoSpeak').checked = config.autoSpeak;
             document.getElementById('continuousListen').checked = config.continuousListen;
             document.getElementById('voiceSpeed').value = config.voiceSpeed;
@@ -671,6 +921,8 @@
             config.mode = document.getElementById('aiMode').value;
             config.geminiKey = document.getElementById('geminiKey').value;
             config.openaiKey = document.getElementById('openaiKey').value;
+            config.weatherKey = document.getElementById('weatherKey').value;
+            config.newsKey = document.getElementById('newsKey').value;
             config.autoSpeak = document.getElementById('autoSpeak').checked;
             config.continuousListen = document.getElementById('continuousListen').checked;
             config.voiceSpeed = parseFloat(document.getElementById('voiceSpeed').value);
@@ -682,7 +934,6 @@
             closeSettings();
             greetUser();
             
-            // Apply continuous listen if enabled
             if (config.continuousListen && !isListening) {
                 recognition.start();
             } else if (!config.continuousListen && isListening) {
@@ -698,9 +949,7 @@
 
         function loadConfig() {
             const saved = localStorage.getItem('config');
-            if (saved) {
-                config = {...config, ...JSON.parse(saved)};
-            }
+            if (saved) config = {...config, ...JSON.parse(saved)};
             
             const savedNotes = localStorage.getItem('notes');
             if (savedNotes) notes = JSON.parse(savedNotes);
@@ -708,7 +957,6 @@
             const savedTodos = localStorage.getItem('todos');
             if (savedTodos) todos = JSON.parse(savedTodos);
             
-            // Auto-start continuous listen if enabled
             if (config.continuousListen) {
                 setTimeout(() => {
                     if (recognition) recognition.start();
@@ -729,7 +977,7 @@
         }
 
         function clearChat() {
-            if (confirm('Clear chat history?')) {
+            if (confirm('Clear chat?')) {
                 messages = [];
                 localStorage.removeItem('messages');
                 location.reload();
